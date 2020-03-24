@@ -1,0 +1,25 @@
+{
+    "name": "top-builds",
+    "version": "1.0.0",
+    "description": "",
+    "main": "public/index.html",
+    "author": "",
+    "license": "ISC",
+    "scripts": {
+        "watch": "tsc --watch",
+        "cache": "node -r dotenv/config ./dist/index.js",
+        "tslint": "tslint -c tslint.json -p tsconfig.json"
+    },
+    "dependencies": {
+        "dotenv": "^8.0.0",
+        "got": "^10.6.0",
+        "lodash": "^4.17.15",
+        "p-map": "^4.0.0"
+    },
+    "devDependencies": {
+        "@types/got": "^9.6.9",
+        "@types/lodash": "^4.14.149",
+        "tslint": "^5.18.0",
+        "typescript": "^3.5.2"
+    }
+}

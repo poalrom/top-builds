@@ -1,0 +1,113 @@
+body {
+    background-color: #131313;
+    padding-bottom: 50px;
+    overflow-x: hidden;
+}
+
+.section {
+    background-color: #070707;
+    padding: 14px 17px;
+    margin: 20px;
+    color: white;
+}
+
+.controls {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    grid-auto-flow: column;
+    grid-gap: 10px;
+}
+
+.progress {
+    padding: 0;
+    text-align: center;
+    color: white;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 10000000;
+    margin: 0;
+    right: 0;
+}
+
+.progress__title {
+    padding: 16px 17px 20px;
+    margin: 0;
+}
+
+.progress__row {
+    height: 4px;
+    display: flex;
+}
+.spell-row {
+    display: flex;
+}
+
+.spell {
+    width: 44px;
+    height: 44px;
+    display: block;
+    overflow: hidden;
+}
+
+.spell:hover {
+    text-decoration: none;
+}
+
+.grayed {
+    filter: grayscale(80%);
+    opacity: 0.4;
+}
+
+.spell_statified {
+    height: 64px;
+    text-align: center;
+    color: white;
+}
+
+.results {
+    display: grid;
+    justify-content: center;
+    justify-items: stretch;
+    grid-template-columns: auto auto;
+    grid-gap: 20px;
+}
+
+.loader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+}
+
+.loader .spinner {
+    margin-bottom: 20px;
+}
+
+.stat-list {
+    display: flex;
+}
+
+.stat-list__item {
+    display: flex;
+    flex-direction: column;
+    padding-right: 30px;
+    text-align: center;
+    position: relative;
+}
+
+.stat-list__item:last-child {
+    padding-right: 0;
+}
+
+.stat-list__item:last-child .stat-list__item-icon {
+    display: none;
+}
+
+.stat-list__item-icon {
+    position: absolute;
+    right: 7px;
+    top: 0;
+}
