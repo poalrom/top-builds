@@ -96,7 +96,6 @@ const apiCache = {} as Record<Region, BnetAPI>;
 export async function getBnetApi(region: Region) {
     if (!apiCache[region]) {
         apiCache[region] = new BnetAPI(config.BNET_ID, config.BNET_SECRET, region);
-        await apiCache[region].auth();
     }
 
     return apiCache[region];
