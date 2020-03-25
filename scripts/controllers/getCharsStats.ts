@@ -37,7 +37,7 @@ export async function getCharsStats(specChars: ISpecChars) {
             corrupts: getCorruptsFromEquipment(equipment),
             corruptionLevel: getCorruptionLevelFromEquipment(equipment),
         };
-    }, { concurrency: 5 });
+    }, { concurrency: 1 });
 
     return charactersInfo.filter(Boolean);
 }

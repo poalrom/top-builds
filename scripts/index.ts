@@ -19,7 +19,7 @@ async function run() {
             ...specChars,
             players: await getCharsStats(specChars)
         };
-    });
+    }, { concurrency: 1 });
 
     for (const spec of charsWithStats) {
         const fileName = `${spec.className}-${spec.spec}.json`;
