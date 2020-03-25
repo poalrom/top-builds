@@ -12,9 +12,12 @@ import { getCorruptsFromEquipment } from "../mappers/getCorruptsFromEquipment";
 import { getCorruptionLevelFromEquipment } from "../mappers/getCorruptionLevelFromEquipment";
 import { ISpecChars } from "../interfaces/ISpecChars";
 
+const ANONYMOUS_REALM = "anonymous";
+
 export async function getCharsStats(specChars: ISpecChars) {
     const bnetAPI = await getBnetApi(Region.eu);
-    const charactersInfo = await pMap(specChars.players, async (char) => {
+    const chars = specChars.players.filter((player) => player.realmSlug !== ANONYMOUS_REALM);
+    const charactersInfo = await pMap(chars, async (char) => {
         const charName = char.name.toLocaleLowerCase();
 
         const charInfo = await bnetAPI.getCharacterInfo(char.realmSlug, charName);
@@ -37,7 +40,7 @@ export async function getCharsStats(specChars: ISpecChars) {
             corrupts: getCorruptsFromEquipment(equipment),
             corruptionLevel: getCorruptionLevelFromEquipment(equipment),
         };
-    }, { concurrency: 1 });
+    }, { concurrency: 5 });
 
     return charactersInfo.filter(Boolean);
 }
