@@ -11,6 +11,7 @@ import { getTalentsFromSpec } from "../mappers/getTalentsFromSpec";
 import { getCorruptsFromEquipment } from "../mappers/getCorruptsFromEquipment";
 import { getCorruptionLevelFromEquipment } from "../mappers/getCorruptionLevelFromEquipment";
 import { ISpecChars } from "../interfaces/ISpecChars";
+import { ICharInfo } from "../interfaces/ICharInfo";
 
 const ANONYMOUS_REALM = "anonymous";
 
@@ -20,7 +21,12 @@ export async function getCharsStats(specChars: ISpecChars) {
     const charactersInfo = await pMap(chars, async (char) => {
         const charName = char.name.toLocaleLowerCase();
 
-        const charInfo = await bnetAPI.getCharacterInfo(char.realmSlug, charName);
+        const charInfo = await bnetAPI.getCharacterInfo(char.realmSlug, charName)
+            .catch((e) => {
+                console.error(e);
+
+                return {} as ICharInfo;
+            });
         if (!charInfo.active_spec || charInfo.active_spec.name.toLocaleLowerCase() !== specChars.spec) {
             return;
         }
