@@ -23,10 +23,12 @@ async function run() {
 
     for (const spec of charsWithStats) {
         const fileName = `${spec.className}-${spec.spec}.json`;
+        console.log(`Save cache to file ${fileName}`);
         fs.writeFileSync(
             path.resolve(__dirname, `../public/data/${fileName}`),
             JSON.stringify(spec)
         );
+        console.log(`Save cache to file ${fileName} success`);
     }
 }
 
