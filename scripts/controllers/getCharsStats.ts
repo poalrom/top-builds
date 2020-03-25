@@ -17,6 +17,7 @@ const ANONYMOUS_REALM = "anonymous";
 
 export async function getCharsStats(specChars: ISpecChars) {
     const bnetAPI = await getBnetApi(Region.eu);
+    await bnetAPI.auth();
     const chars = specChars.players.filter((player) => player.realmSlug !== ANONYMOUS_REALM);
     const charactersInfo = await pMap(chars, async (char) => {
         const charName = char.name.toLocaleLowerCase();
