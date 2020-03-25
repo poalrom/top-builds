@@ -6,6 +6,7 @@
     "author": "",
     "license": "ISC",
     "scripts": {
+        "build": "tsc",
         "watch": "tsc --watch",
         "cache": "node -r dotenv/config ./dist/index.js",
         "tslint": "tslint -c tslint.json -p tsconfig.json"
