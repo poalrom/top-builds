@@ -1,0 +1,23 @@
+.app-loader {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #070707;
+    color: #fff;
+}
+
+.app-loader.hidden {
+    animation: hide 1s linear 1.5s 1 normal forwards;
+}
+
+@keyframes hide {
+    0% { opacity: 1; }
+    99% { opacity: 0; }
+    100% { opacity: 0; visibility: hidden; }
+}

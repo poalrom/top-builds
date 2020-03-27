@@ -6,21 +6,33 @@
     "author": "",
     "license": "ISC",
     "scripts": {
-        "build": "tsc",
+        "build": "tsc && parcel build src/index.html --out-dir public",
         "watch": "tsc --watch",
         "cache": "node -r dotenv/config ./dist/index.js",
-        "tslint": "tslint -c tslint.json -p tsconfig.json"
+        "tslint": "tslint -c tslint.json -p tsconfig.json",
+        "dev": "parcel watch src/index.html --out-dir dist"
     },
     "dependencies": {
+        "@websanova/vue-store": "^1.0.5-beta",
         "dotenv": "^8.0.0",
         "got": "^10.6.0",
         "lodash": "^4.17.15",
-        "p-map": "^4.0.0"
+        "lodash-es": "^4.17.15",
+        "p-map": "^4.0.0",
+        "petal.less": "^0.12.3",
+        "vue": "^2.6.11",
+        "vue-hot-reload-api": "^2.3.4",
+        "vue-resource": "^1.5.1"
     },
     "devDependencies": {
         "@types/got": "^9.6.9",
         "@types/lodash": "^4.14.149",
+        "@types/lodash-es": "^4.17.3",
+        "@vue/component-compiler-utils": "^3.1.1",
+        "less": "^3.11.1",
+        "parcel-bundler": "^1.12.4",
         "tslint": "^5.18.0",
-        "typescript": "^3.5.2"
+        "typescript": "^3.5.2",
+        "vue-template-compiler": "^2.6.11"
     }
 }
