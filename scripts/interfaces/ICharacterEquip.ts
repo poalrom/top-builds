@@ -6,8 +6,8 @@ interface IAzeritePower {
 
 interface IAzeriteEssence {
     slot: number;
-    main_spell_tooltip: ISpellTooltip;
-    passive_spell_tooltip: ISpellTooltip;
+    main_spell_tooltip?: ISpellTooltip;
+    passive_spell_tooltip?: ISpellTooltip;
 }
 
 interface IAzeriteDetails {
