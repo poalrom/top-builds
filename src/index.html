@@ -19,12 +19,24 @@
 <body class="dark">
     <div class="app-loader">
         <h1>Top builds</h1>
+        <strong class="app-loader__error">Something goes wrong. Press F12, open tab "Console" and send screenshot to poalrom@yandex.ru</strong>
+        <span class="spinner spinning app-loader__spinner"><span></span></span>
     </div>
     <div id="root">
         
     </div>
 
     <script src="./index.js"></script>
+    <script>
+        setTimeout(() => {
+            const loader = document.querySelector('.app-loader');
+
+            if (loader && !loader.classList.contains('hidden')) {
+                const loaderError = document.querySelector('.app-loader__error');
+                loaderError && loaderError.classList.add('visible');
+            }
+        }, 5000)
+    </script>
 </body>
 
 </html>

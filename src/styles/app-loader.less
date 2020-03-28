@@ -7,6 +7,7 @@
     z-index: 10;
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     background-color: #070707;
     color: #fff;
@@ -14,6 +15,21 @@
 
 .app-loader.hidden {
     animation: hide 1s linear 1.5s 1 normal forwards;
+}
+
+
+.app-loader__error {
+    width: 100%;
+    text-align: center;
+    display: none;
+}
+
+.app-loader__error.visible {
+    display: block;
+}
+
+.app-loader__error.visible + .app-loader__spinner {
+    display: none;
 }
 
 @keyframes hide {
