@@ -106,6 +106,10 @@
                     this.$store.storeToURL();
                 }
 
+                if (!this.className || !this.specName) {
+                    return;
+                }
+
                 return this.$store.fetch(
                     "chars",
                     `./data/${this.className}-${this.specName}.json`,
