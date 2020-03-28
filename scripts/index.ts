@@ -5,6 +5,7 @@ import { getClassSpecPairs, ClassesWithSpecs } from "./interfaces/ClassesWithSpe
 import { getTopChars } from "./controllers/getTopChars";
 
 import { getCharsStats } from "./controllers/getCharsStats";
+import { config } from "./config";
 
 async function run() {
     fs.writeFileSync(
@@ -12,7 +13,11 @@ async function run() {
         JSON.stringify(ClassesWithSpecs)
     );
     const classSpecPairs = getClassSpecPairs();
-    const rioChars = await pMap(classSpecPairs, getTopChars, { concurrency: 1 });
+    const rioChars = await pMap(
+        classSpecPairs.slice(config.classSpecRange.from, config.classSpecRange.to || classSpecPairs.length),
+        getTopChars,
+        { concurrency: 1 }
+    );
 
     const charsWithStats = await pMap(rioChars, async (specChars) => {
         return {

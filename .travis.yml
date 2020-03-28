@@ -6,7 +6,10 @@ cache:
   - node_modules
 script:
   - npm run build
-  - npm run cache
+  - CACHE_TO=8 npm run cache
+  - CACHE_FROM=8 CACHE_TO=16 npm run cache
+  - CACHE_FROM=16 CACHE_TO=24 npm run cache
+  - CACHE_FROM=24 npm run cache
 deploy:
   provider: pages
   skip_cleanup: true
