@@ -52,6 +52,10 @@
         display: flex;
     }
 
+    .stat-list:last-child .stat-list__item{
+        margin-bottom: 0;
+    }
+
     .stat-list__item {
         display: flex;
         flex-direction: column;

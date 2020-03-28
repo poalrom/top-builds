@@ -48,25 +48,28 @@
                 :key="char.name + char.realm.name"
                 class="results__item"
             >
-                <CharName :char="char" :index="index"></CharName>
-                <p v-if="currentMode === modes.corrupts">{{ char.corruptionLevel }} corruption</p>
-                <div v-show="currentMode === modes.stats" class="stats-lists">
-                    <StatsRow :stats="char.mainStats"></StatsRow>
-                    <StatsRow :stats="char.offStats"></StatsRow>
-                    <StatsRow :stats="char.defStats"></StatsRow>
+                <div class="results__item-content">
+                    <CharName :char="char" :index="index"></CharName>
+                    <p v-if="currentMode === modes.corrupts">{{ char.corruptionLevel }} corruption</p>
+                    <div v-show="currentMode === modes.stats" class="stats-lists">
+                        <StatsRow :stats="char.mainStats"></StatsRow>
+                        <StatsRow :stats="char.offStats"></StatsRow>
+                        <StatsRow :stats="char.defStats"></StatsRow>
+                    </div>
+                    <SpellRow v-show="currentMode === modes.talents" :spells="char.talents"></SpellRow>
+                    <ItemsRow v-show="currentMode === modes.items" :items="char.items"></ItemsRow>
+                    <SpellRow v-show="currentMode === modes.essences" :spells="char.essences"></SpellRow>
+                    <SpellRow
+                        v-show="currentMode === modes.azeritePowers"
+                        :spells="char.azeritePowers"
+                        :maxFrequency="3"
+                    ></SpellRow>
+                    <SpellRow
+                        v-show="currentMode === modes.corrupts"
+                        :spells="char.corrupts"
+                        :maxFrequency="3"
+                    ></SpellRow>
                 </div>
-                <SpellRow v-show="currentMode === modes.talents" :spells="char.talents"></SpellRow>
-                <SpellRow v-show="currentMode === modes.essences" :spells="char.essences"></SpellRow>
-                <SpellRow
-                    v-show="currentMode === modes.azeritePowers"
-                    :spells="char.azeritePowers"
-                    :maxFrequency="3"
-                ></SpellRow>
-                <SpellRow
-                    v-show="currentMode === modes.corrupts"
-                    :spells="char.corrupts"
-                    :maxFrequency="3"
-                ></SpellRow>
             </div>
         </div>
     </div>
@@ -77,6 +80,7 @@
     import get from "lodash/fp/get";
     import startCase from "lodash/fp/startCase";
     import SpellRow from "./components/SpellRow";
+    import ItemsRow from "./components/ItemsRow";
     import StatsRow from "./components/StatsRow";
     import Select from "./components/Select";
     import ModeButton from "./components/ModeButton";
@@ -86,6 +90,7 @@
     import modes from "./Modes";
     import className from "./store/className";
     import specName from "./store/specName";
+    import hoveredItem from "./store/hoveredItem";
     import currentMode from "./store/currentMode";
     import chars from "./store/chars";
     import statsToId from "./mappers/statsToId";
@@ -98,6 +103,7 @@
             ProgressBar,
             ModeButton,
             CharName,
+            ItemsRow,
         },
         methods: {
             startCase,
@@ -154,9 +160,10 @@
             specName: specName.get,
             currentMode: currentMode.get,
             chars: chars.get,
+            hoveredItem: hoveredItem.get,
             resultWidth() {
-                if (this.currentMode === modes.stats) {
-                    return "stats";
+                if ([modes.stats, modes.items].includes(this.currentMode)) {
+                    return this.currentMode;
                 }
 
                 return Math.max(
@@ -190,35 +197,35 @@
                 if (!this.$store.isSuccess("chars")) {
                     return;
                 }
-                const chars = this.$store.get("chars");
                 let charsUseSpells = [];
                 if (
                     [modes.azeritePowers, modes.corrupts].includes(this.currentMode)
                 ) {
-                    charsUseSpells = chars.map(char =>
+                    charsUseSpells = this.chars.map(char =>
                         char[this.currentMode].some(
-                            power => power.name === this.$store.get("hoveredItem"),
+                            power => power.name === this.hoveredItem,
                         ),
                     );
                 }
 
                 if ([modes.talents, modes.essences].includes(this.currentMode)) {
-                    charsUseSpells = chars.map(char =>
-                        char[this.currentMode].includes(
-                            this.$store.get("hoveredItem"),
-                        ),
+                    charsUseSpells = this.chars.map(char =>
+                        char[this.currentMode].includes(this.hoveredItem),
                     );
                 }
 
                 if (this.currentMode === modes.stats) {
-                    charsUseSpells = chars.map(
+                    charsUseSpells = this.chars.map(
                         char =>
-                            statsToId(char.mainStats) ===
-                                this.$store.get("hoveredItem") ||
-                            statsToId(char.offStats) ===
-                                this.$store.get("hoveredItem") ||
-                            statsToId(char.defStats) ===
-                                this.$store.get("hoveredItem"),
+                            statsToId(char.mainStats) === this.hoveredItem ||
+                            statsToId(char.offStats) === this.hoveredItem ||
+                            statsToId(char.defStats) === this.hoveredItem,
+                    );
+                }
+
+                if (this.currentMode === modes.items) {
+                    charsUseSpells = this.chars.map(char =>
+                        char.items.map(get("id")).includes(this.hoveredItem),
                     );
                 }
 

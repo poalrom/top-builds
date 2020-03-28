@@ -4,4 +4,5 @@ export default {
     essences: "essences",
     azeritePowers: "azeritePowers",
     corrupts: "corrupts",
+    items: "items",
 };

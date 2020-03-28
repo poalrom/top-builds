@@ -2,12 +2,21 @@
     display: grid;
     grid-gap: 15px 17px;
     justify-content: center;
-    grid-template-columns: repeat(auto-fill, 340px);
 }
 
 .results__item {
     background-color: #181818;
     padding: 10px 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.results_width_stats {
+    grid-template-columns: repeat(auto-fill, 365px);
+}
+
+.results_width_items {
+    grid-template-columns: repeat(auto-fill, 275px);
 }
 
 @media screen and (max-width: 460px) {
