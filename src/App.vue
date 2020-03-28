@@ -38,12 +38,15 @@
             </span>
             Fetching characters statistics
         </div>
-        <div class="section results" v-if="$store.loaded('chars')">
+        <div
+            class="section results"
+            v-if="$store.loaded('chars')"
+            :class="'results_width_' + resultWidth"
+        >
             <div
                 v-for="(char, index) in chars"
                 :key="char.name + char.realm.name"
                 class="results__item"
-                :class="'results__item_length_' + resultWidth"
             >
                 <CharName :char="char" :index="index"></CharName>
                 <p v-if="currentMode === modes.corrupts">{{ char.corruptionLevel }} corruption</p>
@@ -131,6 +134,18 @@
                 const appLoader = document.querySelector(".app-loader");
                 if (appLoader) {
                     appLoader.classList.add("hidden");
+                }
+            },
+            initWowHead() {
+                const wowheadLinks = Array.from(
+                    this.$el.querySelectorAll("[data-wowhead]"),
+                ).filter(link => !link.attributes["data-wh-icon-added"]);
+                if (wowheadLinks.length) {
+                    try {
+                        $WowheadPower.init();
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
             },
         },
@@ -224,13 +239,11 @@
                 this.filter();
             });
         },
+        mounted() {
+            this.initWowHead();
+        },
         updated() {
-            const wowheadLinks = Array.from(
-                this.$el.querySelectorAll("[data-wowhead]"),
-            ).filter(link => !link.attributes["data-wh-icon-added"]);
-            if (wowheadLinks.length) {
-                $WowheadPower.init();
-            }
+            this.initWowHead();
         },
     };
 </script>

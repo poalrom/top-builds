@@ -2,6 +2,7 @@
     <a
         href="#"
         :data-wowhead="'spell=' + spellId"
+        @click="click"
         class="spell-icon"
         :class="{ disabled, 'spell-icon_statified': hasFrequency }"
         @mouseenter="setHoveredItem(spellName || spellId)"
@@ -38,6 +39,9 @@
         },
         methods: {
             setHoveredItem: hoveredItem.set,
+            click(e) {
+                e.preventDefault();
+            }
         },
         computed: {
             hoveredItem: hoveredItem.get,
