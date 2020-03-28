@@ -4,17 +4,20 @@
         :data-wowhead="wowheadData"
         @click="click"
         class="item-icon"
-        :class="{ disabled }"
+        :class="{ disabled, 'item-icon_statified': item.freq }"
         @mouseenter="setHoveredItem(item.id)"
         @mouseleave="setHoveredItem()"
     >
-        <strong class="item-icon__title">{{humanifiedSlot}}</strong>
+        <strong class="item-icon__title">
+            {{item.freq ? 'x' + item.freq : humanifiedSlot}}
+        </strong>
     </a>
 </template>
 
 <script>
     import hoveredItem from "../store/hoveredItem";
     import startCase from "lodash/fp/startCase";
+    import humanifySlotName from '../mappers/humanifySlotName';
 
     export default {
         props: {
@@ -31,7 +34,7 @@
         },
         computed: {
             humanifiedSlot() {
-                return startCase(this.item.slot.replace(/(\d)/g, "").toLowerCase());
+                return humanifySlotName(this.item.slot);
             },
             hoveredItem: hoveredItem.get,
             wowheadData() {
@@ -59,8 +62,13 @@
         overflow: hidden;
     }
 
+    .item-icon_statified {
+        width: 44px;
+        height: 64px;
+    }
+
     .item-icon__title {
-        /* Overwrite wowhead styles */
+        /* Overwrite wowhead styles =( */
         color: white !important;
     }
 </style>

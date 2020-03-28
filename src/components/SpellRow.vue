@@ -38,7 +38,7 @@
         },
         computed: {
             sortedSpells() {
-                if (!this.spells[0].freq) {
+                if (!this.spells[0] || !this.spells[0].freq) {
                     return this.spells;
                 }
 

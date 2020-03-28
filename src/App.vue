@@ -32,6 +32,14 @@
             <span v-if="currentMode !== modes.stats">spell</span>
             <span v-if="currentMode === modes.stats">statistic's priority</span> to see it's frequency
         </ProgressBar>
+
+        <UniqueStats
+            v-if="[modes.items,
+                modes.essences,
+                modes.azeritePowers,
+                modes.corrupts
+            ].includes(currentMode)"
+        ></UniqueStats>
         <div class="section loader" v-show="$store.isLoading('chars')">
             <span class="spinner spinning big">
                 <span></span>
@@ -86,6 +94,7 @@
     import ModeButton from "./components/ModeButton";
     import ProgressBar from "./components/ProgressBar";
     import CharName from "./components/CharName";
+    import UniqueStats from "./components/UniqueStats";
     import URL from "./URL";
     import modes from "./Modes";
     import className from "./store/className";
@@ -104,6 +113,7 @@
             ModeButton,
             CharName,
             ItemsRow,
+            UniqueStats,
         },
         methods: {
             startCase,

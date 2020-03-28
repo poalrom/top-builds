@@ -28,10 +28,10 @@
 @iterations: 15;
 .item-length-loop (@i) when (@i > 0) {
     .results_width_@{i} {
-        grid-template-columns: repeat(auto-fill, @i*47px + 20px);
+        grid-template-columns: repeat(auto-fill, @i*48px + 20px);
     }
 
-    @media screen and (max-width: @i*47px + 60px) {
+    @media screen and (max-width: @i*48px + 60px) {
         .results {
             grid-template-columns: repeat(auto-fill, 100%);
         }
