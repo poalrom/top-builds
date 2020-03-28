@@ -1,4 +1,4 @@
-import got from "got";
+import got, { RequestError } from "got";
 import { config } from "../config";
 import { Region } from "../interfaces/Region";
 import { Locale } from "../interfaces/Locale";
@@ -42,6 +42,8 @@ class BnetAPI {
         this.accessToken = access_token;
 
         setTimeout(() => this.accessToken = "", expires_in - 10000);
+
+        this.authRequest = undefined;
     }
 
     async getCharacterInfo(realmSlug: string, characterName: string) {
@@ -72,14 +74,17 @@ class BnetAPI {
         );
     }
 
-    private async fetch<T>(namespace: BnetNamespace, uri: string) {
+    private async fetch<T>(namespace: BnetNamespace, uri: string): Promise<T> {
         console.log(`Fetch ${uri}`);
 
         if (!this.isAuthenticated) {
             if (!this.authRequest) {
+                console.log(`Make auth request`);
                 this.authRequest = this.auth();
             }
+            console.log(`Wait for an auth`);
             await this.authRequest;
+            console.log(`Wait for an auth success`);
         }
 
         return await got.get(this.host + uri + `?locale=${this.locale}`, {
@@ -91,6 +96,12 @@ class BnetAPI {
         }).json().then((res: T) => {
             console.log(`Fetch ${uri} success`);
             return res;
+        }).catch((e: RequestError) => {
+            if (e.code === "401") {
+                return this.fetch<T>(namespace, uri);
+            }
+
+            throw e;
         });
     }
 }
