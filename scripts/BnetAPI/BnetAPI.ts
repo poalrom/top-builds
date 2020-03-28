@@ -10,6 +10,7 @@ import { ICharacterEquip } from "../interfaces/ICharacterEquip";
 
 class BnetAPI {
     private accessToken = "";
+    private authRequest: Promise<void> | undefined;
 
     constructor(
         private clientId: string,
@@ -75,7 +76,10 @@ class BnetAPI {
         console.log(`Fetch ${uri}`);
 
         if (!this.isAuthenticated) {
-            await this.auth();
+            if (!this.authRequest) {
+                this.authRequest = this.auth();
+            }
+            await this.authRequest;
         }
 
         return await got.get(this.host + uri + `?locale=${this.locale}`, {
