@@ -6,7 +6,7 @@
     "author": "",
     "license": "ISC",
     "scripts": {
-        "build": "tsc && parcel build src/index.html --out-dir public",
+        "build": "tsc && parcel build src/index.html --out-dir public --public-url ./",
         "watch": "tsc --watch",
         "cache": "node -r dotenv/config ./dist/index.js",
         "tslint": "tslint -c tslint.json -p tsconfig.json",
