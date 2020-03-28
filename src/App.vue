@@ -134,7 +134,6 @@
                     `./data/${this.className}-${this.specName}.json`,
                     {
                         response(res) {
-                            console.log(res);
                             return res.body.players;
                         },
                     },

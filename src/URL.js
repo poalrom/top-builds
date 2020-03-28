@@ -23,8 +23,6 @@ class URL {
     get(dest, key, defaultValue, availableValues) {
         const value = this[dest].get(key);
 
-        console.log(dest, key, defaultValue, availableValues);
-
         if (!Array.isArray(availableValues) || availableValues.includes(value)) {
             return value;
         }

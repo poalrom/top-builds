@@ -46,10 +46,10 @@
         computed: {
             hoveredItem: hoveredItem.get,
             frequencyRate() {
-                return this.frequency / (this.maxFrequency || 1);
+                return this.maxFrequency ? this.frequency / this.maxFrequency : 0;
             },
             hasFrequency() {
-                return this.frequency && this.maxFrequency;
+                return this.frequency;
             },
             disabled() {
                 return (

@@ -1,20 +1,28 @@
 <template>
     <div class="section">
-        <h6>Usage frequency summary</h6>
-        <SpellRow
-            v-if="statsMode === 'spells'"
-            :spells="sortedEntities"
-            :maxFrequency="maxFrequency"
-        ></SpellRow>
-        <div v-if="statsMode === 'items'">
-            <p class="unique-stats__title">Rings</p>
-            <ItemsRow :items="sortedRings"></ItemsRow>
-            <p class="unique-stats__title">Trinkets</p>
-            <ItemsRow :items="sortedTrinkets"></ItemsRow>
-            <p class="unique-stats__title">Main hand</p>
-            <ItemsRow :items="sortedMainHand"></ItemsRow>
-            <p class="unique-stats__title" v-if="sortedOffHand.length">Off hand</p>
-            <ItemsRow :items="sortedOffHand" v-if="sortedOffHand.length"></ItemsRow>
+        <h5 class="unique-stats__title">Usage frequency summary</h5>
+        <div v-if="statsMode === 'spells'" class="unique-stats__section">
+            <div class="unique-stats__section-item">
+                <SpellRow :spells="sortedEntities"></SpellRow>
+            </div>
+        </div>
+        <div v-if="statsMode === 'items'" class="unique-stats__section">
+            <div class="unique-stats__section-item">
+                <p class="unique-stats__section-title">Rings</p>
+                <ItemsRow :items="sortedRings"></ItemsRow>
+            </div>
+            <div class="unique-stats__section-item">
+                <p class="unique-stats__section-title">Trinkets</p>
+                <ItemsRow :items="sortedTrinkets"></ItemsRow>
+            </div>
+            <div class="unique-stats__section-item">
+                <p class="unique-stats__section-title">Main hand</p>
+                <ItemsRow :items="sortedMainHand"></ItemsRow>
+            </div>
+            <div class="unique-stats__section-item">
+                <p class="unique-stats__section-title" v-if="sortedOffHand.length">Off hand</p>
+                <ItemsRow :items="sortedOffHand" v-if="sortedOffHand.length"></ItemsRow>
+            </div>
         </div>
     </div>
 </template>
@@ -29,10 +37,20 @@
     import chars from "../store/chars";
     import flatten from "lodash/fp/flatten";
     import groupBy from "lodash/fp/groupBy";
+    import reverse from "lodash/fp/reverse";
+    import compose from "lodash/fp/compose";
     import humanifySlotName from "../mappers/humanifySlotName";
 
     export default {
         components: { SpellRow, ItemsRow },
+        methods: {
+            sortItems(items) {
+                return compose(
+                    reverse,
+                    sortBy(['freq', 'name', 'id']),
+                )(items);
+            },
+        },
         computed: {
             currentMode: currentMode.get,
             chars: chars.get,
@@ -72,19 +90,16 @@
                 return groupBy("slot", this.entities);
             },
             sortedRings() {
-                return sortBy(["freq"], this.groupedEntities['Finger'] || []);
+                return this.sortItems(this.groupedEntities["Finger"] || []);
             },
             sortedTrinkets() {
-                return sortBy(["freq"], this.groupedEntities['Trinket'] || []);
+                return this.sortItems(this.groupedEntities["Trinket"] || []);
             },
             sortedMainHand() {
-                return sortBy(["freq"], this.groupedEntities['Main Hand'] || []);
+                return this.sortItems(this.groupedEntities["Main Hand"] || []);
             },
             sortedOffHand() {
-                return sortBy(["freq"], this.groupedEntities['Off Hand'] || []);
-            },
-            maxFrequency() {
-                return this.sortedEntities.reduce((acc, { freq }) => acc + freq, 0);
+                return this.sortItems(this.groupedEntities["Off Hand"] || []);
             },
         },
     };
@@ -92,6 +107,22 @@
 
 <style lang='less'>
     .unique-stats__title {
-        margin: 10px 0 5px;
+        text-align: center;
+    }
+
+    .unique-stats__section-title {
+        margin: 0 0 5px;
+    }
+
+    .unique-stats__section {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .unique-stats__section-item {
+        background-color: #181818;
+        padding: 10px 15px;
+        margin: 0 5px 5px 0;
     }
 </style>
