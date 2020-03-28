@@ -1,3 +1,4 @@
+require("dotenv").config();
 import pMap from "p-map";
 import fs from "fs";
 import path from "path";

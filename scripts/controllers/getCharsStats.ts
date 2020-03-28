@@ -10,6 +10,7 @@ import { getEssencesFromEquipment } from "../mappers/getEssencesFromEquipment";
 import { getTalentsFromSpec } from "../mappers/getTalentsFromSpec";
 import { getCorruptsFromEquipment } from "../mappers/getCorruptsFromEquipment";
 import { getCorruptionLevelFromEquipment } from "../mappers/getCorruptionLevelFromEquipment";
+import { getItemsFromEquipment } from "../mappers/getItemsFromEquipment";
 import { ISpecChars } from "../interfaces/ISpecChars";
 import { ICharInfo } from "../interfaces/ICharInfo";
 import { humanify } from "../mappers/humanify";
@@ -48,6 +49,7 @@ export async function getCharsStats(specChars: ISpecChars) {
             talents: getTalentsFromSpec(spec, specChars.spec),
             corrupts: getCorruptsFromEquipment(equipment),
             corruptionLevel: getCorruptionLevelFromEquipment(equipment),
+            items: getItemsFromEquipment(equipment),
         };
     }, { concurrency: 5 });
 
