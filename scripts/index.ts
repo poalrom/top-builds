@@ -2,11 +2,13 @@ require("dotenv").config();
 import pMap from "p-map";
 import fs from "fs";
 import path from "path";
-import { getClassSpecPairs, ClassesWithSpecs } from "./interfaces/ClassesWithSpecs";
-import { getTopChars } from "./controllers/getTopChars";
+import { promisify } from "util";
 
-import { getCharsStats } from "./controllers/getCharsStats";
+import { getClassSpecPairs, ClassesWithSpecs } from "./interfaces/ClassesWithSpecs";
 import { config } from "./config";
+import { getCharactersInfo } from "./controllers/getCharactersInfo";
+
+const promisifiedWriteFile = promisify(fs.writeFile);
 
 async function run() {
     fs.writeFileSync(
@@ -14,28 +16,21 @@ async function run() {
         JSON.stringify(ClassesWithSpecs)
     );
     const classSpecPairs = getClassSpecPairs();
-    const rioChars = await pMap(
+
+    await pMap(
         classSpecPairs.slice(config.classSpecRange.from, config.classSpecRange.to || classSpecPairs.length),
-        getTopChars,
-        { concurrency: 1 }
+        async (classSpec) => {
+            const fileName = `${classSpec.className}-${classSpec.spec}.json`;
+            const classSpecCache = await getCharactersInfo(classSpec);
+            console.log(`Save cache to file ${fileName}`);
+            await promisifiedWriteFile(
+                path.resolve(__dirname, `../public/data/${fileName}`),
+                JSON.stringify(classSpecCache)
+            );
+            console.log(`Save cache to file ${fileName} success`);
+        },
+        { concurrency: 1 },
     );
-
-    const charsWithStats = await pMap(rioChars, async (specChars) => {
-        return {
-            ...specChars,
-            players: await getCharsStats(specChars)
-        };
-    }, { concurrency: 1 });
-
-    for (const spec of charsWithStats) {
-        const fileName = `${spec.className}-${spec.spec}.json`;
-        console.log(`Save cache to file ${fileName}`);
-        fs.writeFileSync(
-            path.resolve(__dirname, `../public/data/${fileName}`),
-            JSON.stringify(spec)
-        );
-        console.log(`Save cache to file ${fileName} success`);
-    }
 }
 
 run()

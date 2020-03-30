@@ -3,7 +3,7 @@ import { Region } from "../interfaces/Region";
 import { config } from "../config";
 import { IRioFilter } from "../interfaces/IRioFilter";
 
-export async function getTopChars(filter: IRioFilter) {
+export async function getTopChars(filter: IRioFilter, page?: number) {
     const {
         region = Region.eu,
         season = config.season,
@@ -15,7 +15,7 @@ export async function getTopChars(filter: IRioFilter) {
     return {
         className,
         spec,
-        players: (await raiderioAPI.getTopCharacters(region, season, className, spec))
+        players: (await raiderioAPI.getTopCharacters(region, season, className, spec, page))
             .map(raiderioAPI.rioFullCharacterToCharData),
     };
 }

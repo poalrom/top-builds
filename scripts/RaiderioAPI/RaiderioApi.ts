@@ -18,11 +18,12 @@ class RaiderioApi {
         season: string,
         charClass: string,
         charSpec: string,
+        page = 0
     ): Promise<IRioFullCharacter[]> {
         console.log(`Fetch top chars for region ${region} season ${season} class ${charClass} spec ${charSpec}`);
         return got.get(
             `${this.host}/mythic-plus/rankings/specs?` +
-            `region=${region}&season=${season}&class=${charClass}&spec=${charSpec}&page=0`
+            `region=${region}&season=${season}&class=${charClass}&spec=${charSpec}&page=${page}`
         )
             .json()
             .then((res: ITopCharacterResponse) => {
