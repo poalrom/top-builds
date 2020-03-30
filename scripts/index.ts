@@ -11,7 +11,7 @@ import { getCharactersInfo } from "./controllers/getCharactersInfo";
 const promisifiedWriteFile = promisify(fs.writeFile);
 
 async function run() {
-    fs.writeFileSync(
+    await promisifiedWriteFile(
         path.resolve(__dirname, "../public/data/classes.json"),
         JSON.stringify(ClassesWithSpecs)
     );
@@ -30,6 +30,11 @@ async function run() {
             console.log(`Save cache to file ${fileName} success`);
         },
         { concurrency: 1 },
+    );
+
+    await promisifiedWriteFile(
+        path.resolve(__dirname, "../public/data/meta.json"),
+        JSON.stringify({ lastCache: Date.now() })
     );
 }
 
