@@ -1,7 +1,7 @@
 import { ISpellTooltip } from "./ISpellTooltip";
 
 interface IAzeritePower {
-    spell_tooltip: ISpellTooltip;
+    spell_tooltip?: ISpellTooltip;
 }
 
 interface IAzeriteEssence {

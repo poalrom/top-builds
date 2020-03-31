@@ -14,6 +14,7 @@ import { getItemsFromEquipment } from "../mappers/getItemsFromEquipment";
 import { ISpecChars } from "../interfaces/ISpecChars";
 import { ICharInfo } from "../interfaces/ICharInfo";
 import { humanify } from "../mappers/humanify";
+import { PartialEmpty } from "../errors/PartialEmpty";
 
 const ANONYMOUS_REALM = "anonymous";
 
@@ -38,19 +39,29 @@ export async function getCharsStats(specChars: ISpecChars) {
         const equipment = await bnetAPI.getCharacterEquipment(char.realmSlug, charName);
         const spec = await bnetAPI.getCharacterSpec(char.realmSlug, charName);
 
-        return {
-            name: charInfo.name,
-            realm: charInfo.realm,
-            mainStats: getMainStatsFromStatistic(stats),
-            offStats: getOffStatsFromStatistic(stats),
-            defStats: getDefStatsFromStatistic(stats),
-            azeritePowers: getAzeritePowersFromEquipment(equipment),
-            essences: getEssencesFromEquipment(equipment),
-            talents: getTalentsFromSpec(spec, specChars.spec),
-            corrupts: getCorruptsFromEquipment(equipment),
-            corruptionLevel: getCorruptionLevelFromEquipment(equipment),
-            items: getItemsFromEquipment(equipment),
-        };
+        try {
+            return {
+                name: charInfo.name,
+                realm: charInfo.realm,
+                mainStats: getMainStatsFromStatistic(stats),
+                offStats: getOffStatsFromStatistic(stats),
+                defStats: getDefStatsFromStatistic(stats),
+                azeritePowers: getAzeritePowersFromEquipment(equipment),
+                essences: getEssencesFromEquipment(equipment),
+                talents: getTalentsFromSpec(spec, specChars.spec),
+                corrupts: getCorruptsFromEquipment(equipment),
+                corruptionLevel: getCorruptionLevelFromEquipment(equipment),
+                items: getItemsFromEquipment(equipment),
+            };
+        } catch (e) {
+            if (!e || e.code !== PartialEmpty.code) {
+                throw e;
+            }
+
+            console.error(String(e) + ` in ${char.name} from ${char.realmSlug}`);
+
+            return;
+        }
     }, { concurrency: 5 });
 
     return charactersInfo.filter(Boolean);
