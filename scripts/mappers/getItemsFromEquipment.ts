@@ -19,6 +19,6 @@ export function getItemsFromEquipment(equipment: ICharacterEquip) {
             slot: item.slot.type,
             ilvl: item.level.value,
             enchantments: item.enchantments ? item.enchantments.map((i) => i.enchantment_id) : [],
-            sockets: item.sockets ? item.sockets.map((i) => i.item.id) : [],
+            sockets: item.sockets ? item.sockets.map((i) => i.item ? i.item.id : undefined).filter(Boolean) : [],
         }));
 }
