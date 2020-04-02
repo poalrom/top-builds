@@ -6,6 +6,16 @@
                 <SpellRow :spells="sortedEntities"></SpellRow>
             </div>
         </div>
+        <div v-if="statsMode === 'essences'" class="unique-stats__section">
+            <div class="unique-stats__section-item">
+                <p class="unique-stats__section-title">Big essences</p>
+                <SpellRow :spells="sortedBigEssences"></SpellRow>
+            </div>
+            <div class="unique-stats__section-item">
+                <p class="unique-stats__section-title">Small essences</p>
+                <SpellRow :spells="sortedSmallEssences"></SpellRow>
+            </div>
+        </div>
         <div v-if="statsMode === 'items'" class="unique-stats__section">
             <div class="unique-stats__section-item">
                 <p class="unique-stats__section-title">Rings</p>
@@ -39,7 +49,6 @@
     import groupBy from "lodash/fp/groupBy";
     import reverse from "lodash/fp/reverse";
     import compose from "lodash/fp/compose";
-    import humanifySlotName from "../mappers/humanifySlotName";
 
     export default {
         components: { SpellRow, ItemsRow },
@@ -55,17 +64,27 @@
             currentMode: currentMode.get,
             chars: chars.get,
             statsMode() {
-                return this.currentMode === modes.items ? "items" : "spells";
+                switch (this.currentMode) {
+                    case modes.items:
+                        return "items";
+                        break;
+                    case modes.essences:
+                        return "essences";
+                        break;
+                    default:
+                        return "spells"
+                        break;
+                }
             },
             entities() {
                 const entities = flatten(this.chars.map(get(this.currentMode)));
-                const groupedEntities = entities.reduce((acc, entity) => {
+                const uniquedEntities = entities.reduce((acc, entity) => {
                     const entityKey = entity.name || entity.id || entity;
 
                     if (!acc[entityKey]) {
                         acc[entityKey] = {
                             id: entity.id || entity,
-                            slot: humanifySlotName(entity.slot),
+                            slot: entity.slot,
                             ilvl: entity.ilvl,
                             name: entity.name,
                             freq: 0,
@@ -81,7 +100,7 @@
                     return acc;
                 }, {});
 
-                return Object.values(groupedEntities);
+                return Object.values(uniquedEntities);
             },
             sortedEntities() {
                 return sortBy(["freq"], this.entities);
@@ -89,17 +108,27 @@
             groupedEntities() {
                 return groupBy("slot", this.entities);
             },
+            sortedBigEssences() {
+                return this.sortItems(this.groupedEntities["BIG"] || []);
+            },
+            sortedSmallEssences() {
+                return this.sortItems(this.groupedEntities["SMALL"] || []);
+            },
             sortedRings() {
-                return this.sortItems(this.groupedEntities["Finger"] || []);
+                const finger1 = this.groupedEntities["FINGER_1"] || [];
+                const finger2 = this.groupedEntities["FINGER_2"] || [];
+                return this.sortItems([...finger1, ...finger2]);
             },
             sortedTrinkets() {
-                return this.sortItems(this.groupedEntities["Trinket"] || []);
+                const trinket1 = this.groupedEntities["TRINKET_1"] || [];
+                const trinket2 = this.groupedEntities["TRINKET_2"] || [];
+                return this.sortItems([...trinket1, ...trinket2]);
             },
             sortedMainHand() {
-                return this.sortItems(this.groupedEntities["Main Hand"] || []);
+                return this.sortItems(this.groupedEntities["MAIN_HAND"] || []);
             },
             sortedOffHand() {
-                return this.sortItems(this.groupedEntities["Off Hand"] || []);
+                return this.sortItems(this.groupedEntities["OFF_HAND"] || []);
             },
         },
     };
