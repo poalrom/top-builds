@@ -33,7 +33,13 @@
                 return typeof spell === "number" ? spell : spell.id;
             },
             getSpellName(spell) {
-                return typeof spell === "number" ? undefined : spell.name;
+                if (typeof spell === "number") {
+                    return;
+                }
+                if (spell.slot) {
+                    return (spell.name || spell.id) + spell.slot;
+                }
+                return spell.name || spell.id;
             },
         },
         computed: {

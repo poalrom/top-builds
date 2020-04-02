@@ -217,7 +217,15 @@
                     );
                 }
 
-                if ([modes.talents, modes.essences].includes(this.currentMode)) {
+                if (this.currentMode === modes.essences) {
+                    charsUseSpells = this.chars.map(char =>
+                        char[this.currentMode].some(
+                            power => (power.id + power.slot) === this.hoveredItem,
+                        ),
+                    );
+                }
+
+                if (this.currentMode === modes.talents) {
                     charsUseSpells = this.chars.map(char =>
                         char[this.currentMode].includes(this.hoveredItem),
                     );
