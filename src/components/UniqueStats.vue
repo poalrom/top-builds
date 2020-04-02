@@ -109,10 +109,10 @@
                 return groupBy("slot", this.entities);
             },
             sortedBigEssences() {
-                return this.sortItems(this.groupedEntities["BIG"] || []);
+                return this.sortItems(this.groupedEntities["BIG_ESSENCE"] || []);
             },
             sortedSmallEssences() {
-                return this.sortItems(this.groupedEntities["SMALL"] || []);
+                return this.sortItems(this.groupedEntities["SMALL_ESSENCE"] || []);
             },
             sortedRings() {
                 const finger1 = this.groupedEntities["FINGER_1"] || [];

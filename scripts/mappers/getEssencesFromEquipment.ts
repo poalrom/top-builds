@@ -21,7 +21,7 @@ export function getEssencesFromEquipment(equipment: ICharacterEquip) {
 
             return {
                 id: spellTooltip.spell.id,
-                slot: essence.slot > 0 ? "SMALL" : "BIG",
+                slot: essence.slot > 0 ? "SMALL_ESSENCE" : "BIG_ESSENCE",
             };
         });
 }
