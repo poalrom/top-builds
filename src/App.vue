@@ -159,7 +159,8 @@
                     try {
                         $WowheadPower.init();
                     } catch (e) {
-                        console.error(e);
+                        console.warn(e);
+                        setTimeout(this.initWowHead.bind(this), 2000);
                     }
                 }
             },
