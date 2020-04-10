@@ -10,7 +10,8 @@
         "watch": "tsc --watch",
         "cache": "node -r dotenv/config ./dist/index.js",
         "tslint": "tslint -c tslint.json -p tsconfig.json",
-        "dev": "parcel watch src/index.html --out-dir dist"
+        "dev": "parcel watch src/index.html --out-dir dist",
+        "start": "live-server --port=8154 ./public"
     },
     "dependencies": {
         "@websanova/vue-store": "^1.0.5-beta",
@@ -30,6 +31,7 @@
         "@types/lodash-es": "^4.17.3",
         "@vue/component-compiler-utils": "^3.1.1",
         "less": "^3.11.1",
+        "live-server": "^1.2.1",
         "parcel-bundler": "^1.12.4",
         "tslint": "^5.18.0",
         "typescript": "^3.5.2",
