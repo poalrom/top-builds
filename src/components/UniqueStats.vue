@@ -49,6 +49,7 @@
     import groupBy from "lodash/fp/groupBy";
     import reverse from "lodash/fp/reverse";
     import compose from "lodash/fp/compose";
+    import humanifySlotName from '../mappers/humanifySlotName';
 
     export default {
         components: { SpellRow, ItemsRow },
@@ -58,6 +59,19 @@
                     reverse,
                     sortBy(['freq', 'name', 'id']),
                 )(items);
+            },
+            getEntityKey(entity) {
+                if (!entity || typeof entity !== 'object') {
+                    return entity;
+                }
+
+                let entityKey = entity.name || entity.id;
+
+                if (entity.slot) {
+                    entityKey += humanifySlotName(entity.slot);
+                }
+
+                return entityKey;
             },
         },
         computed: {
@@ -79,7 +93,7 @@
             entities() {
                 const entities = flatten(this.chars.map(get(this.currentMode)));
                 const uniquedEntities = entities.reduce((acc, entity) => {
-                    const entityKey = entity.name || entity.id || entity;
+                    const entityKey = this.getEntityKey(entity);
 
                     if (!acc[entityKey]) {
                         acc[entityKey] = {
@@ -105,30 +119,30 @@
             sortedEntities() {
                 return sortBy(["freq"], this.entities);
             },
-            groupedEntities() {
+            slotGroupedEntities() {
                 return groupBy("slot", this.entities);
             },
             sortedBigEssences() {
-                return this.sortItems(this.groupedEntities["BIG_ESSENCE"] || []);
+                return this.sortItems(this.slotGroupedEntities["BIG_ESSENCE"] || []);
             },
             sortedSmallEssences() {
-                return this.sortItems(this.groupedEntities["SMALL_ESSENCE"] || []);
+                return this.sortItems(this.slotGroupedEntities["SMALL_ESSENCE"] || []);
             },
             sortedRings() {
-                const finger1 = this.groupedEntities["FINGER_1"] || [];
-                const finger2 = this.groupedEntities["FINGER_2"] || [];
+                const finger1 = this.slotGroupedEntities["FINGER_1"] || [];
+                const finger2 = this.slotGroupedEntities["FINGER_2"] || [];
                 return this.sortItems([...finger1, ...finger2]);
             },
             sortedTrinkets() {
-                const trinket1 = this.groupedEntities["TRINKET_1"] || [];
-                const trinket2 = this.groupedEntities["TRINKET_2"] || [];
+                const trinket1 = this.slotGroupedEntities["TRINKET_1"] || [];
+                const trinket2 = this.slotGroupedEntities["TRINKET_2"] || [];
                 return this.sortItems([...trinket1, ...trinket2]);
             },
             sortedMainHand() {
-                return this.sortItems(this.groupedEntities["MAIN_HAND"] || []);
+                return this.sortItems(this.slotGroupedEntities["MAIN_HAND"] || []);
             },
             sortedOffHand() {
-                return this.sortItems(this.groupedEntities["OFF_HAND"] || []);
+                return this.sortItems(this.slotGroupedEntities["OFF_HAND"] || []);
             },
         },
     };
