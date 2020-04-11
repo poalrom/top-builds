@@ -9,27 +9,9 @@ import { config } from "./config";
 import { getCharactersInfo } from "./controllers/getCharactersInfo";
 
 const promisifiedWriteFile = promisify(fs.writeFile);
-// Minimum cache interval in hours
-const minCacheInterval = 12;
 
 async function run() {
     const metaFilePath = path.resolve(__dirname, "../public/data/meta.json");
-    const metaData = JSON.parse(fs.readFileSync(metaFilePath).toString());
-    // Cache freshness in hours
-    const cacheFreshness = Math.ceil(
-        (Date.now() - metaData.lastCache) /
-        // ms    s    m
-        (1000 * 60 * 60)
-    );
-    if (cacheFreshness < minCacheInterval) {
-        if (!config.forceCache) {
-            console.log(`Cache is fresh now. Last cache saved less then ${cacheFreshness}h ago`);
-            return;
-        } else {
-            console.log(`Run force cache. Last cache saved less then ${cacheFreshness}h ago`);
-        }
-    }
-
     const classesFilePath = path.resolve(__dirname, "../public/data/classes.json");
 
     await promisifiedWriteFile(classesFilePath, JSON.stringify(ClassesWithSpecs));
