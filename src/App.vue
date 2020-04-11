@@ -30,7 +30,8 @@
         >
             Hover a
             <span v-if="currentMode !== modes.stats">spell</span>
-            <span v-if="currentMode === modes.stats">statistic's priority</span> to see it's frequency
+            <span v-if="currentMode === modes.stats">stats priority</span>
+            to&nbsp;see&nbsp;it's&nbsp;frequency
         </ProgressBar>
 
         <UniqueStats
