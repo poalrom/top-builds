@@ -15,11 +15,11 @@
     },
     "dependencies": {
         "@websanova/vue-store": "^1.0.5-beta",
+        "bottleneck": "^2.19.5",
         "dotenv": "^8.0.0",
         "got": "^10.6.0",
         "lodash": "^4.17.15",
         "lodash-es": "^4.17.15",
-        "p-map": "^4.0.0",
         "petal.less": "^0.12.3",
         "vue": "^2.6.11",
         "vue-hot-reload-api": "^2.3.4",

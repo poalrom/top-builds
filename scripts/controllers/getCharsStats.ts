@@ -1,5 +1,3 @@
-import pMap from "p-map";
-
 import { getBnetApi } from "../BnetAPI/BnetAPI";
 import { Region } from "../interfaces/Region";
 import { getMainStatsFromStatistic } from "../mappers/getMainStatsFromStatistic";
@@ -22,7 +20,7 @@ export async function getCharsStats(specChars: ISpecChars) {
     const bnetAPI = await getBnetApi(Region.eu);
     await bnetAPI.auth();
     const chars = specChars.players.filter((player) => player.realmSlug !== ANONYMOUS_REALM);
-    const charactersInfo = await pMap(chars, async (char) => {
+    const charactersInfo = await Promise.all(chars.map(async (char) => {
         const charName = char.name.toLocaleLowerCase();
 
         const charInfo = await bnetAPI.getCharacterInfo(char.realmSlug, charName)
@@ -66,7 +64,7 @@ export async function getCharsStats(specChars: ISpecChars) {
 
             return;
         }
-    }, { concurrency: 5 });
+    }));
 
     return charactersInfo.filter(Boolean);
 }

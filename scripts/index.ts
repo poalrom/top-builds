@@ -1,5 +1,4 @@
 require("dotenv").config();
-import pMap from "p-map";
 import fs from "fs";
 import path from "path";
 import { promisify } from "util";
@@ -17,21 +16,18 @@ async function run() {
     await promisifiedWriteFile(classesFilePath, JSON.stringify(ClassesWithSpecs));
 
     const classSpecPairs = getClassSpecPairs();
+    const classSpecPairsForLoad = classSpecPairs.slice(config.classSpecRange.from, config.classSpecRange.to || classSpecPairs.length);
 
-    await pMap(
-        classSpecPairs.slice(config.classSpecRange.from, config.classSpecRange.to || classSpecPairs.length),
-        async (classSpec) => {
-            const fileName = `${classSpec.className}-${classSpec.spec}.json`;
-            const classSpecCache = await getCharactersInfo(classSpec);
-            console.log(`Save cache to file ${fileName}`);
-            await promisifiedWriteFile(
-                path.resolve(__dirname, `../public/data/${fileName}`),
-                JSON.stringify(classSpecCache)
-            );
-            console.log(`Save cache to file ${fileName} success`);
-        },
-        { concurrency: 1 },
-    );
+    for (const classSpec of classSpecPairsForLoad) {
+        const fileName = `${classSpec.className}-${classSpec.spec}.json`;
+        const classSpecCache = await getCharactersInfo(classSpec);
+        console.log(`Save cache to file ${fileName}`);
+        await promisifiedWriteFile(
+            path.resolve(__dirname, `../public/data/${fileName}`),
+            JSON.stringify(classSpecCache)
+        );
+        console.log(`Save cache to file ${fileName} success`);
+    }
 
     await promisifiedWriteFile(metaFilePath, JSON.stringify({ lastCache: Date.now() }));
 }

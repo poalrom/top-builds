@@ -1,4 +1,5 @@
 import got, { RequestError } from "got";
+import Bottleneck from "bottleneck";
 import { config } from "../config";
 import { Region } from "../interfaces/Region";
 import { Locale } from "../interfaces/Locale";
@@ -11,6 +12,11 @@ import { ICharacterEquip } from "../interfaces/ICharacterEquip";
 class BnetAPI {
     private accessToken = "";
     private authRequest: Promise<void> | undefined;
+    private limiter = new Bottleneck({
+        maxConcurrent: 10,
+        // 10 RPS
+        minTime: 100,
+    });
 
     constructor(
         private clientId: string,
@@ -87,13 +93,15 @@ class BnetAPI {
             console.log(`Wait for an auth success`);
         }
 
-        return await got.get(this.host + uri + `?locale=${this.locale}`, {
-            headers: {
-                Authorization: `Bearer ${this.accessToken}`,
-                "Content-Type": "application/json",
-                "Battlenet-Namespace": `${namespace}-${this.region}`
-            },
-        }).json().then((res: T) => {
+        return this.limiter.schedule(
+            () => got.get(this.host + uri + `?locale=${this.locale}`, {
+                headers: {
+                    Authorization: `Bearer ${this.accessToken}`,
+                    "Content-Type": "application/json",
+                    "Battlenet-Namespace": `${namespace}-${this.region}`
+                },
+            }).json()
+        ).then((res: T) => {
             console.log(`Fetch ${uri} success`);
             return res;
         }).catch((e: RequestError) => {
