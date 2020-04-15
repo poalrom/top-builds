@@ -11,10 +11,11 @@ import { getCharactersInfo } from "./controllers/getCharactersInfo";
 const promisifiedWriteFile = promisify(fs.writeFile);
 
 async function run() {
-    await promisifiedWriteFile(
-        path.resolve(__dirname, "../public/data/classes.json"),
-        JSON.stringify(ClassesWithSpecs)
-    );
+    const metaFilePath = path.resolve(__dirname, "../public/data/meta.json");
+    const classesFilePath = path.resolve(__dirname, "../public/data/classes.json");
+
+    await promisifiedWriteFile(classesFilePath, JSON.stringify(ClassesWithSpecs));
+
     const classSpecPairs = getClassSpecPairs();
 
     await pMap(
@@ -32,10 +33,7 @@ async function run() {
         { concurrency: 1 },
     );
 
-    await promisifiedWriteFile(
-        path.resolve(__dirname, "../public/data/meta.json"),
-        JSON.stringify({ lastCache: Date.now() })
-    );
+    await promisifiedWriteFile(metaFilePath, JSON.stringify({ lastCache: Date.now() }));
 }
 
 run()
