@@ -23,7 +23,7 @@ class BnetAPI {
         private token: string,
         private region: Region,
         private locale: Locale = Locale.en,
-    ) {}
+    ) { }
 
     get host() {
         return `https://${this.region}.api.blizzard.com`;
@@ -80,37 +80,41 @@ class BnetAPI {
         );
     }
 
-    private async fetch<T>(namespace: BnetNamespace, uri: string): Promise<T> {
-        console.log(`Fetch ${uri}`);
-
-        if (!this.isAuthenticated) {
-            if (!this.authRequest) {
-                console.log(`Make auth request`);
-                this.authRequest = this.auth();
-            }
-            console.log(`Wait for an auth`);
-            await this.authRequest;
-            console.log(`Wait for an auth success`);
-        }
-
+    private fetch<T>(namespace: BnetNamespace, uri: string): Promise<T> {
         return this.limiter.schedule(
-            () => got.get(this.host + uri + `?locale=${this.locale}`, {
-                headers: {
-                    Authorization: `Bearer ${this.accessToken}`,
-                    "Content-Type": "application/json",
-                    "Battlenet-Namespace": `${namespace}-${this.region}`
-                },
-            }).json()
-        ).then((res: T) => {
-            console.log(`Fetch ${uri} success`);
-            return res;
-        }).catch((e: RequestError) => {
-            if (e.code === "401") {
-                return this.fetch<T>(namespace, uri);
-            }
+            async () => {
+                console.log(`Fetch ${uri}`);
 
-            throw e;
-        });
+                if (!this.isAuthenticated) {
+                    if (!this.authRequest) {
+                        console.log(`Make auth request`);
+                        this.authRequest = this.auth();
+                    }
+                    console.log(`Wait for an auth`);
+                    await this.authRequest;
+                    console.log(`Wait for an auth success`);
+                }
+
+                return await got.get(this.host + uri + `?locale=${this.locale}`, {
+                    headers: {
+                        Authorization: `Bearer ${this.accessToken}`,
+                        "Content-Type": "application/json",
+                        "Battlenet-Namespace": `${namespace}-${this.region}`
+                    },
+                })
+                    .json()
+                    .then((res: T) => {
+                        console.log(`Fetch ${uri} success`);
+                        return res;
+                    }).catch((e: RequestError) => {
+                        if (e.code === "401") {
+                            return this.fetch<T>(namespace, uri);
+                        }
+
+                        throw e;
+                    });
+            }
+        );
     }
 }
 
