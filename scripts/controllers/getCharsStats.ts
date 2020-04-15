@@ -27,6 +27,10 @@ export async function getCharsStats(specChars: ISpecChars) {
 
         const charInfo = await bnetAPI.getCharacterInfo(char.realmSlug, charName)
             .catch((e) => {
+                if (e.code === "500") {
+                    throw e;
+                }
+
                 console.error(e);
 
                 return {} as ICharInfo;
