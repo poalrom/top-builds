@@ -59,7 +59,7 @@
             >
                 <div class="results__item-content">
                     <CharName :char="char" :index="index"></CharName>
-                    <p v-if="currentMode === modes.corrupts">{{ char.corruptionLevel }} corruption</p>
+                    <!-- <p v-if="currentMode === modes.corrupts">{{ char.corruptionLevel }} corruption</p> -->
                     <div v-show="currentMode === modes.stats" class="stats-lists">
                         <StatsRow :stats="char.mainStats"></StatsRow>
                         <StatsRow :stats="char.offStats"></StatsRow>
@@ -67,7 +67,7 @@
                     </div>
                     <SpellRow v-show="currentMode === modes.talents" :spells="char.talents"></SpellRow>
                     <ItemsRow v-show="currentMode === modes.items" :items="char.items"></ItemsRow>
-                    <SpellRow v-show="currentMode === modes.essences" :spells="char.essences"></SpellRow>
+                    <!-- <SpellRow v-show="currentMode === modes.essences" :spells="char.essences"></SpellRow>
                     <SpellRow
                         v-show="currentMode === modes.azeritePowers"
                         :spells="char.azeritePowers"
@@ -77,7 +77,7 @@
                         v-show="currentMode === modes.corrupts"
                         :spells="char.corrupts"
                         :maxFrequency="3"
-                    ></SpellRow>
+                    ></SpellRow> -->
                 </div>
             </div>
         </div>
@@ -209,23 +209,23 @@
                     return;
                 }
                 let charsUseSpells = [];
-                if (
-                    [modes.azeritePowers, modes.corrupts].includes(this.currentMode)
-                ) {
-                    charsUseSpells = this.chars.map(char =>
-                        char[this.currentMode].some(
-                            power => power.name === this.hoveredItem,
-                        ),
-                    );
-                }
+                // if (
+                //     [modes.azeritePowers, modes.corrupts].includes(this.currentMode)
+                // ) {
+                //     charsUseSpells = this.chars.map(char =>
+                //         char[this.currentMode].some(
+                //             power => power.name === this.hoveredItem,
+                //         ),
+                //     );
+                // }
 
-                if (this.currentMode === modes.essences) {
-                    charsUseSpells = this.chars.map(char =>
-                        char[this.currentMode].some(
-                            power => (power.id + power.slot) === this.hoveredItem,
-                        ),
-                    );
-                }
+                // if (this.currentMode === modes.essences) {
+                //     charsUseSpells = this.chars.map(char =>
+                //         char[this.currentMode].some(
+                //             power => (power.id + power.slot) === this.hoveredItem,
+                //         ),
+                //     );
+                // }
 
                 if (this.currentMode === modes.talents) {
                     charsUseSpells = this.chars.map(char =>

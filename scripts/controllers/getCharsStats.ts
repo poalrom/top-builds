@@ -48,11 +48,11 @@ export async function getCharsStats(specChars: ISpecChars) {
                 mainStats: getMainStatsFromStatistic(stats),
                 offStats: getOffStatsFromStatistic(stats),
                 defStats: getDefStatsFromStatistic(stats),
-                azeritePowers: getAzeritePowersFromEquipment(equipment),
-                essences: getEssencesFromEquipment(equipment),
+                // azeritePowers: getAzeritePowersFromEquipment(equipment),
+                // essences: getEssencesFromEquipment(equipment),
                 talents: getTalentsFromSpec(spec, specChars.spec),
-                corrupts: getCorruptsFromEquipment(equipment),
-                corruptionLevel: getCorruptionLevelFromEquipment(equipment),
+                // corrupts: getCorruptsFromEquipment(equipment),
+                // corruptionLevel: getCorruptionLevelFromEquipment(equipment),
                 items: getItemsFromEquipment(equipment),
             };
         } catch (e) {
