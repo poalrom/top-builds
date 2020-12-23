@@ -28,10 +28,9 @@
             :value="hoveredSpellFrequency"
             :maxValue="chars.length"
         >
-            Hover a
-            <span v-if="currentMode !== modes.stats">spell</span>
-            <span v-if="currentMode === modes.stats">stats priority</span>
-            to&nbsp;see&nbsp;it's&nbsp;frequency
+            <span v-if="currentMode === modes.talents">Hover a talent to&nbsp;see&nbsp;it's&nbsp;frequency</span>
+            <span v-if="currentMode === modes.items">Hover an item to&nbsp;see&nbsp;it's&nbsp;frequency</span>
+            <span v-if="currentMode === modes.stats">Frequent&nbsp;stats&nbsp;priority diplayed on&nbsp;top of&nbsp;a&nbsp;characters&nbsp;list</span>
         </ProgressBar>
 
         <UniqueStats
@@ -59,25 +58,9 @@
             >
                 <div class="results__item-content">
                     <CharName :char="char" :index="index"></CharName>
-                    <!-- <p v-if="currentMode === modes.corrupts">{{ char.corruptionLevel }} corruption</p> -->
-                    <div v-show="currentMode === modes.stats" class="stats-lists">
-                        <StatsRow :stats="char.mainStats"></StatsRow>
-                        <StatsRow :stats="char.offStats"></StatsRow>
-                        <StatsRow :stats="char.defStats"></StatsRow>
-                    </div>
+                    <StatsRow v-show="currentMode === modes.stats" :stats="char.offStats"></StatsRow>
                     <SpellRow v-show="currentMode === modes.talents" :spells="char.talents"></SpellRow>
                     <ItemsRow v-show="currentMode === modes.items" :items="char.items"></ItemsRow>
-                    <!-- <SpellRow v-show="currentMode === modes.essences" :spells="char.essences"></SpellRow>
-                    <SpellRow
-                        v-show="currentMode === modes.azeritePowers"
-                        :spells="char.azeritePowers"
-                        :maxFrequency="3"
-                    ></SpellRow>
-                    <SpellRow
-                        v-show="currentMode === modes.corrupts"
-                        :spells="char.corrupts"
-                        :maxFrequency="3"
-                    ></SpellRow> -->
                 </div>
             </div>
         </div>
@@ -209,36 +192,10 @@
                     return;
                 }
                 let charsUseSpells = [];
-                // if (
-                //     [modes.azeritePowers, modes.corrupts].includes(this.currentMode)
-                // ) {
-                //     charsUseSpells = this.chars.map(char =>
-                //         char[this.currentMode].some(
-                //             power => power.name === this.hoveredItem,
-                //         ),
-                //     );
-                // }
-
-                // if (this.currentMode === modes.essences) {
-                //     charsUseSpells = this.chars.map(char =>
-                //         char[this.currentMode].some(
-                //             power => (power.id + power.slot) === this.hoveredItem,
-                //         ),
-                //     );
-                // }
 
                 if (this.currentMode === modes.talents) {
                     charsUseSpells = this.chars.map(char =>
                         char[this.currentMode].includes(this.hoveredItem),
-                    );
-                }
-
-                if (this.currentMode === modes.stats) {
-                    charsUseSpells = this.chars.map(
-                        char =>
-                            statsToId(char.mainStats) === this.hoveredItem ||
-                            statsToId(char.offStats) === this.hoveredItem ||
-                            statsToId(char.defStats) === this.hoveredItem,
                     );
                 }
 

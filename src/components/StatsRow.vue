@@ -1,9 +1,6 @@
 <template>
     <div
         class="stat-list"
-        :class="{ disabled }"
-        @mouseover="$store.set('hoveredItem', statsId)"
-        @mouseleave="$store.set('hoveredItem', undefined)"
     >
         <p class="stat-list__item" :key="'stat' + stat.title" v-for="stat in stats">
             <b class="stat-list__item-title">{{ humanify(stat.title) }}</b>
@@ -32,11 +29,6 @@
         computed: {
             statsId() {
                 return statsToId(this.stats);
-            },
-            disabled() {
-                const hoveredItem = this.$store.get("hoveredItem");
-
-                return hoveredItem && hoveredItem !== this.statsId;
             },
         },
     };
@@ -76,42 +68,5 @@
         position: absolute;
         right: 7px;
         top: 0;
-    }
-
-    @media screen and (max-width: 767px) {
-        .stats-lists {
-            flex-direction: row;
-            justify-content: space-between;
-        }
-
-        .stat-list {
-            flex-direction: column;
-            margin-right: 15px;
-        }
-
-        .stat-list:last-child {
-            margin-right: 0;
-        }
-
-        .stat-list__item {
-            padding-right: 0;
-            margin-bottom: 30px;
-        }
-
-
-        .stat-list__item-icon {
-            top: initial;
-            bottom: -25px;
-            transform: rotate(90deg);
-            right: calc(50% - 8px);
-        }
-
-        .stat-list:last-child .stat-list__item{
-            margin-bottom: 30px;
-        }
-
-        .stat-list .stat-list__item:last-child{
-            margin-bottom: 0;
-        }
     }
 </style>
