@@ -2,11 +2,11 @@
     <div class="items-tab">
         <div class="items-tab__stats section">
             <h5 class="section__title">Usage frequency summary</h5>
-            <ItemStats :items="rings">Rings</ItemStats>
-            <ItemStats :items="trinkets">Trinkets</ItemStats>
-            <ItemStats :items="mainHand" v-if="mainHand.length">Main hand</ItemStats>
-            <ItemStats :items="offHand" v-if="offHand.length">Off hand</ItemStats>
-            <ItemStats :items="legendaries" v-if="legendaries.length">Legendaries</ItemStats>
+            <Summarizer :items="rings">Rings</Summarizer>
+            <Summarizer :items="trinkets">Trinkets</Summarizer>
+            <Summarizer :items="mainHand" v-if="mainHand.length">Main hand</Summarizer>
+            <Summarizer :items="offHand" v-if="offHand.length">Off hand</Summarizer>
+            <Summarizer :items="legendaries" v-if="legendaries.length">Legendaries</Summarizer>
         </div>
         <div
             class="section results results_width_items"
@@ -28,14 +28,14 @@
 <script>
     import ItemsRow from "../components/ItemsRow";
     import CharName from "../components/CharName";
-    import ItemStats from "../components/ItemStats";
+    import Summarizer from "../components/Summarizer";
     import chars from "../store/chars";
 
     export default {
         components: {
             ItemsRow,
             CharName,
-            ItemStats,
+            Summarizer,
         },
         methods: {
             getItems(slots) {

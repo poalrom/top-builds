@@ -4,9 +4,14 @@
             <h5 class="section__title">Main build</h5>
             <div class="results">
                 <div class="results__item">
-                    <div class="results__item-content">
-                        <SpellRow :spells="mainBuild" alreadySorted></SpellRow>
-                    </div>
+                    <Summarizer
+                        v-for="talents in talentsByTier"
+                        :key="talents[0].id"
+                        mode="spells"
+                        unwrapped
+                        :limit="1"
+                        :items="talents"
+                    ></Summarizer>
                 </div>
             </div>
         </div>
@@ -27,6 +32,7 @@
 
 <script>
 import SpellRow from "../components/SpellRow";
+import Summarizer from "../components/Summarizer";
 import CharName from "../components/CharName";
 import chars from "../store/chars";
 
@@ -34,34 +40,21 @@ export default {
     components: {
         SpellRow,
         CharName,
+        Summarizer,
     },
     computed: {
         chars: chars.get,
-        mainBuild() {
-            return this.chars
-                .reduce((acc, { talents }) => {
-                    talents.forEach((talent, i) => {
-                        if (!acc[i]) {
-                            acc[i] = {};
-                        }
-                        if (!acc[i][talent]) {
-                            acc[i][talent] = 0;
-                        }
-                        acc[i][talent]++;
-                    });
-
-                    return acc;
-                }, [])
-                .map((talentRow) => {
-                    const [talentID, freq] = Object.entries(talentRow).sort(
-                        ([, freq1], [, freq2]) => freq2 - freq1,
-                    )[0];
-
-                    return {
-                        id: Number(talentID),
-                        freq,
-                    };
+        talentsByTier() {
+            return this.chars.reduce((acc, { talents }) => {
+                talents.forEach((talent, i) => {
+                    if (!acc[i]) {
+                        acc[i] = [];
+                    }
+                    acc[i].push({ id: talent });
                 });
+
+                return acc;
+            }, []);
         },
     },
 };
