@@ -2,11 +2,9 @@
     <div class="spell-row">
         <SpellIcon
             v-for="spell in spells"
-            :key="'spell' + getSpellId(spell)"
-            :spellName="getSpellName(spell)"
-            :spellId="getSpellId(spell)"
-            :frequency="spell.freq"
-            :maxFrequency="maxFrequency"
+            :key="getSpellId(spell)"
+            :id="getSpellId(spell)"
+            :freq="spell.freq"
         ></SpellIcon>
     </div>
 </template>
@@ -20,9 +18,6 @@ export default {
         spells: {
             type: Array,
             required: true,
-        },
-        maxFrequency: {
-            type: Number,
         },
     },
     methods: {

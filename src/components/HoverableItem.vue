@@ -16,8 +16,8 @@
 
     export default {
         props: {
-            ids: {
-                type: Array,
+            id: {
+                type: Number,
             },
         },
         methods: {
@@ -45,11 +45,8 @@
         },
         computed: {
             hoveredItem: hoveredItem.get,
-            id() {
-                return this.ids.filter(Boolean)[0];
-            },
             enabled() {
-                return this.ids.some(id => this.hoveredItem.id === id);
+                return this.id === this.hoveredItem.id;
             }
         },
     };
