@@ -11,66 +11,72 @@
 </template>
 
 <script>
-    import modes from "../Modes";
-    import SpellRow from "./SpellRow";
-    import ItemsRow from "./ItemsRow";
-    import get from "lodash/fp/get";
-    import sortBy from "lodash/fp/sortBy";
-    import currentMode from "../store/currentMode";
-    import chars from "../store/chars";
-    import flatten from "lodash/fp/flatten";
-    import groupBy from "lodash/fp/groupBy";
-    import reverse from "lodash/fp/reverse";
-    import compose from "lodash/fp/compose";
-    import humanifySlotName from '../mappers/humanifySlotName';
+import modes from "../Modes";
+import SpellRow from "./SpellRow";
+import ItemsRow from "./ItemsRow";
+import get from "lodash/fp/get";
+import sortBy from "lodash/fp/sortBy";
+import currentMode from "../store/currentMode";
+import chars from "../store/chars";
+import flatten from "lodash/fp/flatten";
+import groupBy from "lodash/fp/groupBy";
+import reverse from "lodash/fp/reverse";
+import compose from "lodash/fp/compose";
+import humanifySlotName from "../mappers/humanifySlotName";
 
-    const SUMMARIZER_TYPE = {
-        items: 'items',
-        spells: 'spells',
-    }
+const SUMMARIZER_TYPE = {
+    items: "items",
+    spells: "spells",
+};
 
-    export default {
-        components: { SpellRow, ItemsRow },
-        props: {
-            items: {
-                type: Array,
-                required: true,
-            },
-            mode: {
-                type: String,
-                default: SUMMARIZER_TYPE.items,
-                validator: (val) => Object.values(SUMMARIZER_TYPE).includes(val),
-            },
-            unwrapped: {
-                type: Boolean,
-            },
-            limit: {
-                type: Number,
-            }
+export default {
+    components: { SpellRow, ItemsRow },
+    props: {
+        items: {
+            type: Array,
+            required: true,
         },
-        computed: {
-            itemsStats() {
-                const limit = this.limit || this.items.length;
+        mode: {
+            type: String,
+            default: SUMMARIZER_TYPE.items,
+            validator: (val) => Object.values(SUMMARIZER_TYPE).includes(val),
+        },
+        unwrapped: {
+            type: Boolean,
+        },
+        limit: {
+            type: Number,
+        },
+    },
+    computed: {
+        itemsStats() {
+            const limit = this.limit || this.items.length;
 
-                return Object.values(this.items.reduce((acc, charItems) => {
+            return Object.values(
+                this.items.reduce((acc, charItems) => {
                     if (!Array.isArray(charItems)) {
                         charItems = [charItems];
                     }
                     for (const item of charItems) {
-                        if (!acc[item.id]) {
-                            acc[item.id] = { ...item };
+                        const itemIsID = typeof item !== 'object';
+                        const id = itemIsID ? item : item.id;
+                        if (!acc[id]) {
+                            acc[id] = itemIsID ? { id } : { ...item };
                         }
-                        if (item.ilvl && acc[item.id].ilvl < item.ilvl) {
-                            acc[item.id].ilvl = item.ilvl;
+                        if (item.ilvl && acc[id].ilvl < item.ilvl) {
+                            acc[id].ilvl = item.ilvl;
                         }
-                        acc[item.id].freq = (acc[item.id].freq || 0) + 1;
+                        acc[id].freq = (acc[id].freq || 0) + 1;
                     }
 
                     return acc;
-                }, {})).sort((a, b) => b.freq - a.freq).slice(0, limit);
-            },
+                }, {}),
+            )
+                .sort((a, b) => b.freq - a.freq)
+                .slice(0, limit);
         },
-    };
+    },
+};
 </script>
 
 <style lang='less'>

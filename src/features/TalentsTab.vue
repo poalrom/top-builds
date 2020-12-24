@@ -3,10 +3,12 @@
         <div class="section">
             <h5 class="section__title">Main build</h5>
             <div class="results">
-                <div class="results__item">
+                <div
+                    class="results__item"
+                    v-for="talents in talentsByTier"
+                    :key="talents[0].id"
+                >
                     <Summarizer
-                        v-for="talents in talentsByTier"
-                        :key="talents[0].id"
                         mode="spells"
                         unwrapped
                         :limit="1"
@@ -15,16 +17,14 @@
                 </div>
             </div>
         </div>
-        <div class="section results results_width_7">
+        <div class="section results">
             <div
                 v-for="(char, index) in chars"
                 :key="char.name + char.realm.name"
                 class="results__item"
             >
-                <div class="results__item-content">
-                    <CharName :char="char" :index="index"></CharName>
-                    <SpellRow :spells="char.talents"></SpellRow>
-                </div>
+                <CharName :char="char" :index="index"></CharName>
+                <SpellRow :spells="char.talents"></SpellRow>
             </div>
         </div>
     </div>

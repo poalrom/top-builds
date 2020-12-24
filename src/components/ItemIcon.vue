@@ -3,7 +3,7 @@
         :title="title"
         :id="item.id"
         :wowheadData="wowheadData"
-        :size="item.freq ? 'm' : 'l'"
+        :size="item.freq ? 'm' : hideTitle ? 's' : 'l'"
     ></WowheadIcon>
 </template>
 
@@ -17,6 +17,9 @@ export default {
         WowheadIcon,
     },
     props: {
+        hideTitle: {
+            type: Boolean,
+        },
         item: {
             type: Object,
             required: true,
@@ -24,6 +27,10 @@ export default {
     },
     computed: {
         title() {
+            if (this.hideTitle) {
+                return;
+            }
+
             return this.item.freq
                 ? "x" + this.item.freq
                 : humanifySlotName(this.item.slot);

@@ -11,16 +11,14 @@
                 Off hand
             </Summarizer>
         </div>
-        <div class="section results results_width_items">
+        <div class="section results">
             <div
                 v-for="(char, index) in chars"
                 :key="char.name + char.realm.name"
-                class="results__item"
+                class="results__item results__item_type_item"
             >
-                <div class="results__item-content">
-                    <CharName :char="char" :index="index"></CharName>
-                    <ItemsRow :items="char.items"></ItemsRow>
-                </div>
+                <CharName :char="char" :index="index"></CharName>
+                <ItemsRow :items="char.items"></ItemsRow>
             </div>
         </div>
     </div>

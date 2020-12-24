@@ -20,16 +20,14 @@
                 </div>
             </div>
         </div>
-        <div class="section results results_width_stats">
+        <div class="section results">
             <div
                 v-for="(char, index) in chars"
                 :key="char.name + char.realm.name"
                 class="results__item"
             >
-                <div class="results__item-content">
-                    <CharName :char="char" :index="index"></CharName>
-                    <StatsRow :stats="char.offStats"></StatsRow>
-                </div>
+                <CharName :char="char" :index="index"></CharName>
+                <StatsRow :stats="char.offStats"></StatsRow>
             </div>
         </div>
     </div>
@@ -78,7 +76,11 @@ export default {
                                 ([, freq1], [, freq2]) =>
                                     Math.max(freq2) - Math.max(freq1),
                             )
-                            .map(([title, freq]) => ({ title: startCase(title) + ` (${freq}/${this.chars.length})` })),
+                            .map(([title, freq]) => ({
+                                title:
+                                    startCase(title) +
+                                    ` (${freq}/${this.chars.length})`,
+                            })),
                         nth: this.nth(i + 1),
                     };
                 });
