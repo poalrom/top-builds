@@ -2,14 +2,19 @@
     <div class="items-tab">
         <div class="items-tab__stats section">
             <h5 class="section__title">Usage frequency summary</h5>
-            <Summarizer :items="rings">Rings</Summarizer>
-            <Summarizer :items="trinkets">Trinkets</Summarizer>
-            <Summarizer :items="mainHand" v-if="mainHand.length">
-                Main hand
-            </Summarizer>
-            <Summarizer :items="offHand" v-if="offHand.length">
-                Off hand
-            </Summarizer>
+            <div
+                class="flex-summarizer"
+                :class="'flex-summarizer_width_' + statsWidth"
+            >
+                <Summarizer :items="rings">Rings</Summarizer>
+                <Summarizer :items="trinkets">Trinkets</Summarizer>
+                <Summarizer :items="mainHand" v-if="mainHand.length">
+                    Main hand
+                </Summarizer>
+                <Summarizer :items="offHand" v-if="offHand.length">
+                    Off hand
+                </Summarizer>
+            </div>
         </div>
         <div class="section results">
             <div
@@ -56,6 +61,14 @@ export default {
         },
         offHand() {
             return this.getItems(["OFF_HAND"]);
+        },
+        statsWidth() {
+            return Math.max(
+                new Set(this.rings.flat().map(({ id }) => id)).size,
+                new Set(this.trinkets.flat().map(({ id }) => id)).size,
+                new Set(this.mainHand.flat().map(({ id }) => id)).size,
+                new Set(this.offHand.flat().map(({ id }) => id)).size,
+            );
         },
     },
 };

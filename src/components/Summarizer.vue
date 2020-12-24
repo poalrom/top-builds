@@ -83,7 +83,6 @@ export default {
 .item-stats {
     background-color: #181818;
     padding: 10px 15px;
-    margin: 0 5px 5px 0;
 }
 
 .item-stats__title {

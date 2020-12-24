@@ -1,0 +1,15 @@
+.flex-summarizer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    grid-gap: 10px 15px;
+}
+
+@iterations: 30;
+.item-length-loop (@i) when (@i > 0) {
+    .flex-summarizer_width_@{i} .summarizer{
+        width: @i*48px + 20px;
+    }
+    .item-length-loop(@i - 1);
+}
+.item-length-loop (@iterations);

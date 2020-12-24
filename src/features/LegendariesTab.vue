@@ -1,17 +1,22 @@
 <template>
     <div class="legendaries-tab">
-        <div class="legendaries-tab__stats section">
+        <div class="section">
             <h5 class="section__title">Usage frequency summary</h5>
-            <Summarizer :items="legendaries" v-if="legendaries.length">
-                Legendaries
-            </Summarizer>
-            <Summarizer
-                :items="legendaryEffects"
-                v-if="legendaryEffects.length"
-                mode="spells"
+            <div
+                class="flex-summarizer"
+                :class="'flex-summarizer_width_' + statsWidth"
             >
-                Legendary effects
-            </Summarizer>
+                <Summarizer :items="legendaries" v-if="legendaries.length">
+                    Legendaries
+                </Summarizer>
+                <Summarizer
+                    :items="legendaryEffects"
+                    v-if="legendaryEffects.length"
+                    mode="spells"
+                >
+                    Legendary effects
+                </Summarizer>
+            </div>
         </div>
         <div class="section results">
             <div
@@ -52,11 +57,17 @@ export default {
         legendaryEffects() {
             return this.chars.map((char) => char.legendaries[0].spells).flat();
         },
+        statsWidth() {
+            return Math.max(
+                new Set(this.legendaries.map(({ id }) => id)).size,
+                new Set(this.legendaryEffects).size,
+            );
+        },
     },
 };
 </script>
 
-<style>
+<style lang="less">
 .legendaries-tab__row {
     display: flex;
 }
