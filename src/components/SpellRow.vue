@@ -27,6 +27,9 @@
             maxFrequency: {
                 type: Number,
             },
+            alreadySorted: {
+                type: Boolean,
+            }
         },
         methods: {
             getSpellId(spell) {
@@ -44,7 +47,7 @@
         },
         computed: {
             sortedSpells() {
-                if (!this.spells[0] || !this.spells[0].freq) {
+                if (this.alreadySorted || !this.spells[0] || !this.spells[0].freq) {
                     return this.spells;
                 }
 

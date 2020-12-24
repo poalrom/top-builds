@@ -14,7 +14,7 @@
                         </p>
                         <StatsRow
                             :stats="statsPriority.stats"
-                            vertical="true"
+                            vertical
                         ></StatsRow>
                     </div>
                 </div>
