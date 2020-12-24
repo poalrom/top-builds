@@ -46,10 +46,8 @@ export async function getCharsStats(specChars: ISpecChars) {
                 offStats: getOffStatsFromStatistic(stats),
                 defStats: getDefStatsFromStatistic(stats),
                 talents: getTalentsFromSpec(spec, specChars.spec),
-                items: [
-                    ...getItemsFromEquipment(equipment),
-                    ...getLegendariesFromEquipment(equipment),
-                ],
+                items: getItemsFromEquipment(equipment),
+                legendaries: getLegendariesFromEquipment(equipment),
             };
         } catch (e) {
             if (!e || e.code !== PartialEmpty.code) {

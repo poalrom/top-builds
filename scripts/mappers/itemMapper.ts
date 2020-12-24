@@ -7,6 +7,7 @@ interface IClientItem {
     sockets: number[];
     enchantments: number[];
     bonuses: number[];
+    spells: number[];
 }
 
 export function itemMapper(overwrite: Partial<IClientItem> = {}) {
@@ -17,6 +18,7 @@ export function itemMapper(overwrite: Partial<IClientItem> = {}) {
         enchantments: item.enchantments ? item.enchantments.map((i) => i.enchantment_id) : [],
         sockets: item.sockets ? item.sockets.map((i) => i.item ? i.item.id : undefined).filter(Boolean) : [],
         bonuses: item.bonus_list || [],
+        spells: (item.spells || []).map(spell => spell.spell.id),
         ...overwrite,
     });
 }
