@@ -1,8 +1,6 @@
 <template>
-    <div class="stats-tab">
-        <div
-            class="section results results_width_7"
-        >
+    <div class="talents-tab">
+        <div class="section results results_width_7">
             <div
                 v-for="(char, index) in chars"
                 :key="char.name + char.realm.name"
@@ -18,17 +16,17 @@
 </template>
 
 <script>
-    import SpellRow from "../components/SpellRow";
-    import CharName from "../components/CharName";
-    import chars from "../store/chars";
+import SpellRow from "../components/SpellRow";
+import CharName from "../components/CharName";
+import chars from "../store/chars";
 
-    export default {
-        components: {
-            SpellRow,
-            CharName,
-        },
-        computed: {
-            chars: chars.get,
-        },
-    };
+export default {
+    components: {
+        SpellRow,
+        CharName,
+    },
+    computed: {
+        chars: chars.get,
+    },
+};
 </script>
