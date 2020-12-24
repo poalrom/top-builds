@@ -1,4 +1,5 @@
 import { ICharacterEquip, IItemSlot } from "../interfaces/ICharacterEquip";
+import { itemMapper } from "./itemMapper";
 
 const MAJOR_ITEM_TYPES = [
     IItemSlot.FINGER_1,
@@ -13,12 +14,5 @@ export function getItemsFromEquipment(equipment: ICharacterEquip) {
     const majorItems = equipment.equipped_items
         .filter(item => MAJOR_ITEM_TYPES.includes(item.slot.type));
 
-    return majorItems
-        .map((item) => ({
-            id: item.item.id,
-            slot: item.slot.type,
-            ilvl: item.level.value,
-            enchantments: item.enchantments ? item.enchantments.map((i) => i.enchantment_id) : [],
-            sockets: item.sockets ? item.sockets.map((i) => i.item ? i.item.id : undefined).filter(Boolean) : [],
-        }));
+    return majorItems.map(itemMapper());
 }

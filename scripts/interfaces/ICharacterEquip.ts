@@ -51,7 +51,7 @@ interface ISocket {
     };
 }
 
-interface IItem {
+export interface IItem {
     azerite_details?: IAzeriteDetails;
     is_corrupted?: true;
     spells?: ISpellTooltip[];
@@ -67,6 +67,10 @@ interface IItem {
     };
     enchantments: IEnchantment[];
     sockets: ISocket[];
+    quality: {
+        type: String;
+    };
+    bonus_list?: number[];
 }
 
 export interface ICharacterEquip {

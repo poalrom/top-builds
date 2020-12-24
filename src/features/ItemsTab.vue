@@ -6,6 +6,7 @@
             <ItemStats :items="trinkets">Trinkets</ItemStats>
             <ItemStats :items="mainHand" v-if="mainHand.length">Main hand</ItemStats>
             <ItemStats :items="offHand" v-if="offHand.length">Off hand</ItemStats>
+            <ItemStats :items="legendaries" v-if="legendaries.length">Legendaries</ItemStats>
         </div>
         <div
             class="section results results_width_items"
@@ -54,6 +55,9 @@
             },
             offHand() {
                 return this.getItems(['OFF_HAND']);
+            },
+            legendaries() {
+                return this.getItems(['LEGENDARY']);
             },
         },
     };

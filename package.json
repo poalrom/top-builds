@@ -10,6 +10,7 @@
         "build:front": "parcel build src/index.html --out-dir public --public-url ./",
         "build:cache": "tsc",
         "cache": "node -r dotenv/config ./dist_scripts/index.js",
+        "debug:cache": "node --inspect -r dotenv/config ./dist_scripts/index.js",
         "lint": "run-p -l lint:*",
         "lint:cache": "tslint -c tslint.json -p tsconfig.json",
         "dev": "run-p -l dev:*",

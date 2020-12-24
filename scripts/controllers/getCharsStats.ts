@@ -3,16 +3,13 @@ import { Region } from "../interfaces/Region";
 import { getMainStatsFromStatistic } from "../mappers/getMainStatsFromStatistic";
 import { getOffStatsFromStatistic } from "../mappers/getOffStatsFromStatistic";
 import { getDefStatsFromStatistic } from "../mappers/getDefStatsFromStatistic";
-import { getAzeritePowersFromEquipment } from "../mappers/getAzeritePowersFromEquipment";
-import { getEssencesFromEquipment } from "../mappers/getEssencesFromEquipment";
 import { getTalentsFromSpec } from "../mappers/getTalentsFromSpec";
-import { getCorruptsFromEquipment } from "../mappers/getCorruptsFromEquipment";
-import { getCorruptionLevelFromEquipment } from "../mappers/getCorruptionLevelFromEquipment";
 import { getItemsFromEquipment } from "../mappers/getItemsFromEquipment";
 import { ISpecChars } from "../interfaces/ISpecChars";
 import { ICharInfo } from "../interfaces/ICharInfo";
 import { humanify } from "../mappers/humanify";
 import { PartialEmpty } from "../errors/PartialEmpty";
+import { getLegendariesFromEquipment } from "../mappers/getLegendariesFromEquipment";
 
 const ANONYMOUS_REALM = "anonymous";
 
@@ -48,12 +45,11 @@ export async function getCharsStats(specChars: ISpecChars) {
                 mainStats: getMainStatsFromStatistic(stats),
                 offStats: getOffStatsFromStatistic(stats),
                 defStats: getDefStatsFromStatistic(stats),
-                // azeritePowers: getAzeritePowersFromEquipment(equipment),
-                // essences: getEssencesFromEquipment(equipment),
                 talents: getTalentsFromSpec(spec, specChars.spec),
-                // corrupts: getCorruptsFromEquipment(equipment),
-                // corruptionLevel: getCorruptionLevelFromEquipment(equipment),
-                items: getItemsFromEquipment(equipment),
+                items: [
+                    ...getItemsFromEquipment(equipment),
+                    ...getLegendariesFromEquipment(equipment),
+                ],
             };
         } catch (e) {
             if (!e || e.code !== PartialEmpty.code) {

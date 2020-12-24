@@ -4,6 +4,14 @@ import { IRioFilter } from "./IRioFilter";
 
 export const ClassesWithSpecs = [
     {
+        className: Class.monk,
+        specs: [
+            Spec.mistweaver,
+            Spec.brewmaster,
+            Spec.windwalker,
+        ],
+    },
+    {
         className: Class.demon_hunter,
         specs: [
             Spec.havoc,
@@ -41,14 +49,6 @@ export const ClassesWithSpecs = [
             Spec.arcane,
             Spec.fire,
             Spec.frost,
-        ],
-    },
-    {
-        className: Class.monk,
-        specs: [
-            Spec.brewmaster,
-            Spec.windwalker,
-            Spec.mistweaver,
         ],
     },
     {
