@@ -1,25 +1,28 @@
 <template>
-    <a
-        href="#"
-        :data-wowhead="wowheadData"
-        @click="click"
-        class="item-icon"
-        :class="{ disabled, 'item-icon_statified': item.freq }"
-        @mouseenter="setHoveredItem(item.id)"
-        @mouseleave="setHoveredItem()"
-    >
-        <strong class="item-icon__title">
-            {{item.freq ? 'x' + item.freq : humanifiedSlot}}
-        </strong>
-    </a>
+    <HoverableItem :ids="[item.id]">
+        <a
+            href="#"
+            :data-wowhead="wowheadData"
+            @click="click"
+            class="item-icon"
+            :class="{ 'item-icon_statified': item.freq }"
+        >
+            <strong class="item-icon__title">
+                {{item.freq ? 'x' + item.freq : humanifiedSlot}}
+            </strong>
+        </a>
+    </HoverableItem>
 </template>
 
 <script>
-    import hoveredItem from "../store/hoveredItem";
     import startCase from "lodash/fp/startCase";
     import humanifySlotName from '../mappers/humanifySlotName';
+    import HoverableItem from './HoverableItem';
 
     export default {
+        components: {
+            HoverableItem,
+        },
         props: {
             item: {
                 type: Object,
@@ -27,7 +30,6 @@
             },
         },
         methods: {
-            setHoveredItem: hoveredItem.set,
             click(e) {
                 e.preventDefault();
             },
@@ -36,7 +38,6 @@
             humanifiedSlot() {
                 return humanifySlotName(this.item.slot);
             },
-            hoveredItem: hoveredItem.get,
             wowheadData() {
                 return [
                     "item=" + this.item.id,
@@ -45,9 +46,6 @@
                         "ench=" + this.item.enchantments.join(":"),
                     this.item.sockets && "gems=" + this.item.sockets.join(":"),
                 ].join("&");
-            },
-            disabled() {
-                return this.hoveredItem && this.hoveredItem !== this.item.id;
             },
         },
     };

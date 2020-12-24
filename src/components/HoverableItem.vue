@@ -1,0 +1,56 @@
+<template>
+    <span
+        @click="click"
+        @mouseenter="mouseEnter"
+        @mouseleave="mouseLeave"
+        :data-id="id"
+        class="hoverable-item"
+        :class="{ 'hoverable-item_enabled': enabled }"
+    >
+        <slot></slot>
+    </span>
+</template>
+
+<script>
+    import hoveredItem from "../store/hoveredItem";
+
+    export default {
+        props: {
+            ids: {
+                type: Array,
+            },
+        },
+        methods: {
+            setHoveredItem: hoveredItem.set,
+            mouseEnter() {
+                if (!this.hoveredItem.permanent) {
+                    this.setHoveredItem({ id: this.id });
+                }
+            },
+            mouseLeave() {
+                if (!this.hoveredItem.permanent) {
+                    this.setHoveredItem({});
+                }
+            },
+            click(e) {
+                e.preventDefault();
+                e.setHoveredItem = true;
+                if (this.hoveredItem.id === this.id && this.hoveredItem.permanent) {
+                    this.setHoveredItem({});
+                } else {
+                    this.setHoveredItem({ id: this.id, permanent: true });
+                }
+                
+            },
+        },
+        computed: {
+            hoveredItem: hoveredItem.get,
+            id() {
+                return this.ids.filter(Boolean)[0];
+            },
+            enabled() {
+                return this.ids.some(id => this.hoveredItem.id === id);
+            }
+        },
+    };
+</script>

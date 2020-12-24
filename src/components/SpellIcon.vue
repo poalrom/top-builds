@@ -1,27 +1,30 @@
 <template>
-    <a
-        href="#"
-        :data-wowhead="'spell=' + spellId"
-        @click="click"
-        class="spell-icon"
-        :class="{ disabled, 'spell-icon_statified': hasFrequency }"
-        @mouseenter="setHoveredItem(spellName || spellId)"
-        @mouseleave="setHoveredItem()"
-    >
-        <h6
-            :class="{
-                'frequent': frequencyRate > 0.7,
-                'normal': 0.4 < frequencyRate && frequencyRate < 0.7
-            }"
-            v-if="hasFrequency"
-        >x{{ frequency }}</h6>
-    </a>
+    <HoverableItem :ids="[spellName, spellId]">
+        <a
+            href="#"
+            :data-wowhead="'spell=' + spellId"
+            @click="click"
+            class="spell-icon"
+            :class="{ 'spell-icon_statified': hasFrequency }"
+        >
+            <h6
+                :class="{
+                    'frequent': frequencyRate > 0.7,
+                    'normal': 0.4 < frequencyRate && frequencyRate < 0.7
+                }"
+                v-if="hasFrequency"
+            >x{{ frequency }}</h6>
+        </a>
+    </HoverableItem>
 </template>
 
 <script>
-    import hoveredItem from "../store/hoveredItem";
+    import HoverableItem from './HoverableItem';
 
     export default {
+        components: {
+            HoverableItem,
+        },
         props: {
             maxFrequency: {
                 type: Number,
@@ -38,25 +41,16 @@
             },
         },
         methods: {
-            setHoveredItem: hoveredItem.set,
             click(e) {
                 e.preventDefault();
-            }
+            },
         },
         computed: {
-            hoveredItem: hoveredItem.get,
             frequencyRate() {
                 return this.maxFrequency ? this.frequency / this.maxFrequency : 0;
             },
             hasFrequency() {
                 return this.frequency;
-            },
-            disabled() {
-                return (
-                    this.hoveredItem &&
-                    this.hoveredItem !== this.spellId &&
-                    this.hoveredItem !== this.spellName
-                );
             },
         },
     };

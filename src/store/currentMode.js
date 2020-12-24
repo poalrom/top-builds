@@ -8,7 +8,7 @@ export default {
     get: field.getter(FIELD_NAME),
     set(val) {
         field.setter(FIELD_NAME)(val);
-        hoveredItem.set('');
+        hoveredItem.set({});
         URL.set("hash", FIELD_NAME, val);
         URL.pushState();
     },

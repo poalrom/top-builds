@@ -1,5 +1,5 @@
 <template>
-    <div class="app">
+    <div class="app" @click="click">
         <form class="section form-inline controls" @submit="filter">
             <Select
                 :value="className"
@@ -23,6 +23,21 @@
                 class="controls__item"
             ></ModeButton>
         </div>
+
+        <div class="section loader" v-show="$store.isLoading('chars')">
+            <span class="spinner spinning big">
+                <span></span>
+            </span>
+            Fetching characters statistics
+        </div>
+
+        <HoverableContainer v-if="$store.loaded('chars')">
+            <StatsTab v-show="currentMode === modes.stats"></StatsTab>
+            <TalentsTab v-show="currentMode === modes.talents"></TalentsTab>
+            <ItemsTab v-show="currentMode === modes.items"></ItemsTab>
+        </HoverableContainer>
+
+        
         <ProgressBar
             v-if="chars.length > 0"
             :value="hoveredSpellFrequency"
@@ -30,40 +45,8 @@
         >
             <span v-if="currentMode === modes.talents">Hover a talent to&nbsp;see&nbsp;it's&nbsp;frequency</span>
             <span v-if="currentMode === modes.items">Hover an item to&nbsp;see&nbsp;it's&nbsp;frequency</span>
-            <span v-if="currentMode === modes.stats">Frequent&nbsp;stats&nbsp;priority diplayed on&nbsp;top of&nbsp;a&nbsp;characters&nbsp;list</span>
+            <span v-if="currentMode === modes.stats">Frequent&nbsp;stats&nbsp;priority diplayed on&nbsp;top of&nbsp;the&nbsp;characters&nbsp;list</span>
         </ProgressBar>
-
-        <UniqueStats
-            v-if="[modes.items,
-                modes.essences,
-                modes.azeritePowers,
-                modes.corrupts
-            ].includes(currentMode)"
-        ></UniqueStats>
-        <div class="section loader" v-show="$store.isLoading('chars')">
-            <span class="spinner spinning big">
-                <span></span>
-            </span>
-            Fetching characters statistics
-        </div>
-        <div
-            class="section results"
-            v-if="$store.loaded('chars')"
-            :class="'results_width_' + resultWidth"
-        >
-            <div
-                v-for="(char, index) in chars"
-                :key="char.name + char.realm.name"
-                class="results__item"
-            >
-                <div class="results__item-content">
-                    <CharName :char="char" :index="index"></CharName>
-                    <StatsRow v-show="currentMode === modes.stats" :stats="char.offStats"></StatsRow>
-                    <SpellRow v-show="currentMode === modes.talents" :spells="char.talents"></SpellRow>
-                    <ItemsRow v-show="currentMode === modes.items" :items="char.items"></ItemsRow>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -71,14 +54,15 @@
     import compose from "lodash/fp/compose";
     import get from "lodash/fp/get";
     import startCase from "lodash/fp/startCase";
-    import SpellRow from "./components/SpellRow";
-    import ItemsRow from "./components/ItemsRow";
-    import StatsRow from "./components/StatsRow";
+    import ItemsTab from "./features/ItemsTab";
+    import StatsTab from "./features/StatsTab";
+    import TalentsTab from "./features/TalentsTab";
+    import CovenantsTab from "./features/CovenantsTab";
     import Select from "./components/Select";
+    import HoverableContainer from "./components/HoverableContainer";
     import ModeButton from "./components/ModeButton";
     import ProgressBar from "./components/ProgressBar";
     import CharName from "./components/CharName";
-    import UniqueStats from "./components/UniqueStats";
     import URL from "./URL";
     import modes from "./Modes";
     import className from "./store/className";
@@ -90,19 +74,25 @@
 
     export default {
         components: {
-            SpellRow,
-            StatsRow,
+            StatsTab,
             Select,
             ProgressBar,
             ModeButton,
             CharName,
-            ItemsRow,
-            UniqueStats,
+            ItemsTab,
+            TalentsTab,
+            HoverableContainer,
         },
         methods: {
             startCase,
             setClassName: className.set,
             setSpecName: specName.set,
+            setHoveredItem: hoveredItem.set,
+            click(e) {
+                if (!e.setHoveredItem) {
+                    this.setHoveredItem({});
+                }
+            },
             filter(e) {
                 if (e) {
                     e.preventDefault();
@@ -195,13 +185,13 @@
 
                 if (this.currentMode === modes.talents) {
                     charsUseSpells = this.chars.map(char =>
-                        char[this.currentMode].includes(this.hoveredItem),
+                        char[this.currentMode].includes(this.hoveredItem.id),
                     );
                 }
 
                 if (this.currentMode === modes.items) {
                     charsUseSpells = this.chars.map(char =>
-                        char.items.map(get("id")).includes(this.hoveredItem),
+                        char.items.map(get("id")).includes(this.hoveredItem.id),
                     );
                 }
 

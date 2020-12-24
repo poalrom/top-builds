@@ -1,9 +1,9 @@
 import Vue from 'vue';
 
 export default {
-    getter(name) {
+    getter(name, defaultValue) {
         return function () {
-            return Vue.store.get(name);
+            return Vue.store.get(name) || defaultValue;
         }
     },
     setter(name) {

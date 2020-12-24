@@ -39,7 +39,7 @@
                 if (spell.slot) {
                     return (spell.name || spell.id) + spell.slot;
                 }
-                return spell.name || spell.id;
+                return String(spell.name || spell.id);
             },
         },
         computed: {
