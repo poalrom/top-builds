@@ -18,6 +18,9 @@
     import startCase from "lodash/fp/startCase";
     import humanifySlotName from '../mappers/humanifySlotName';
     import HoverableItem from './HoverableItem';
+    import className from "../store/className";
+    import specName from "../store/specName";
+    import classSpecToWowhead from "../mappers/classSpecToWowhead";
 
     export default {
         components: {
@@ -39,13 +42,18 @@
                 return humanifySlotName(this.item.slot);
             },
             wowheadData() {
+                const classSpecIDs = classSpecToWowhead(className.get(), specName.get());
+
                 return [
                     "item=" + this.item.id,
                     "ilvl=" + this.item.ilvl,
                     this.item.enchantments &&
                         "ench=" + this.item.enchantments.join(":"),
                     this.item.sockets && "gems=" + this.item.sockets.join(":"),
-                ].join("&");
+                    this.item.bonuses && "bonus=" + this.item.bonuses.join(":"),
+                    "class=" + classSpecIDs.class,
+                    "spec=" + classSpecIDs.spec,
+                ].filter(Boolean).join("&");
             },
         },
     };
