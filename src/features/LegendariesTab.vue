@@ -20,7 +20,7 @@
         </div>
         <div class="section results">
             <div
-                v-for="(char, index) in chars"
+                v-for="(char, index) in charsWithLegendaries"
                 :key="char.name + char.realm.name"
                 class="results__item results__item_type_legendary"
             >
@@ -51,11 +51,14 @@ export default {
     },
     computed: {
         chars: chars.get,
+        charsWithLegendaries() {
+            return this.chars.filter(char => char.legendaries.length > 0)
+        },
         legendaries() {
-            return this.chars.map((char) => char.legendaries).flat();
+            return this.charsWithLegendaries.map((char) => char.legendaries).flat();
         },
         legendaryEffects() {
-            return this.chars.map((char) => char.legendaries[0].spells).flat();
+            return this.charsWithLegendaries.map((char) => char.legendaries[0].spells).flat();
         },
         statsWidth() {
             return Math.max(
