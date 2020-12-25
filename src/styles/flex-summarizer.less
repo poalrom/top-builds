@@ -8,7 +8,7 @@
 @iterations: 30;
 .item-length-loop (@i) when (@i > 0) {
     .flex-summarizer_width_@{i} .summarizer{
-        width: @i*48px + 20px;
+        width: (@i*44px) + 30px;
     }
     .item-length-loop(@i - 1);
 }

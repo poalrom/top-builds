@@ -8,10 +8,10 @@
             >
                 <Summarizer :items="rings">Rings</Summarizer>
                 <Summarizer :items="trinkets">Trinkets</Summarizer>
-                <Summarizer :items="mainHand" v-if="mainHand.length">
+                <Summarizer :items="mainHand" v-if="mainHand.flat().length">
                     Main hand
                 </Summarizer>
-                <Summarizer :items="offHand" v-if="offHand.length">
+                <Summarizer :items="offHand" v-if="offHand.flat().length">
                     Off hand
                 </Summarizer>
             </div>

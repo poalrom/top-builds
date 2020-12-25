@@ -2,11 +2,11 @@
     <div class="stats-tab">
         <div class="section">
             <h5 class="section__title">Stats frequency</h5>
-            <div class="results results_width_vertical-stats">
+            <div class="results">
                 <div
                     v-for="(statsPriority, index) in statsPriorities"
                     :key="index"
-                    class="results__item"
+                    class="results__item results__item_type_vertical-stats"
                 >
                     <div class="results__item-content">
                         <p class="section__title">
