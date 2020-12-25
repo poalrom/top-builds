@@ -6,17 +6,14 @@
                 <div
                     v-for="(statsPriority, index) in statsPriorities"
                     :key="index"
-                    class="results__item results__item_type_vertical-stats"
+                    class="results__item"
                 >
-                    <div class="results__item-content">
-                        <p class="section__title">
-                            {{ statsPriority.nth }} stat
-                        </p>
-                        <StatsRow
-                            :stats="statsPriority.stats"
-                            vertical
-                        ></StatsRow>
-                    </div>
+                    <p class="section__title">
+                        {{ statsPriority.nth }} stats priority ({{
+                            statsPriority.freq
+                        }}/{{ chars.length }})
+                    </p>
+                    <StatsRow :stats="statsPriority.stats"></StatsRow>
                 </div>
             </div>
         </div>
@@ -38,6 +35,7 @@ import startCase from "lodash/fp/startCase";
 import StatsRow from "../components/StatsRow";
 import CharName from "../components/CharName";
 import chars from "../store/chars";
+import median from "../mappers/median";
 
 export default {
     components: {
@@ -56,32 +54,38 @@ export default {
     computed: {
         chars: chars.get,
         statsPriorities() {
-            return this.chars
-                .reduce((acc, { offStats: charStats }) => {
-                    charStats.forEach((stat, i) => {
-                        if (!acc[i]) {
-                            acc[i] = {};
-                        }
-                        if (!acc[i][stat.title]) {
-                            acc[i][stat.title] = 0;
-                        }
-                        acc[i][stat.title]++;
-                    });
+            return Object.values(
+                this.chars.reduce((acc, { offStats: charStats }) => {
+                    const statsOrder = charStats.map((stat) => stat.title);
+                    const key = statsOrder.join();
+
+                    if (!acc[key]) {
+                        acc[key] = {
+                            order: statsOrder,
+                            values: [[], [], [], []],
+                            freq: 0,
+                        };
+                    }
+
+                    acc[key].freq++;
+
+                    charStats.forEach((stat, i) =>
+                        acc[key].values[i].push(stat.value),
+                    );
+
                     return acc;
-                }, [])
+                }, {}),
+            )
+                .filter((a) => a.freq > 1)
+                .sort((a, b) => b.freq - a.freq)
                 .map((stats, i) => {
                     return {
-                        stats: Object.entries(stats)
-                            .sort(
-                                ([, freq1], [, freq2]) =>
-                                    Math.max(freq2) - Math.max(freq1),
-                            )
-                            .map(([title, freq]) => ({
-                                title:
-                                    startCase(title) +
-                                    ` (${freq}/${this.chars.length})`,
-                            })),
+                        stats: stats.order.map((title, i) => ({
+                            title,
+                            value: median(stats.values[i]),
+                        })),
                         nth: this.nth(i + 1),
+                        freq: stats.freq,
                     };
                 });
         },
