@@ -4,7 +4,6 @@
             <p class="item-stats__title"><slot></slot></p>
             <ItemsRow v-if="mode === 'items'" :items="itemsStats"></ItemsRow>
             <SpellRow v-if="mode === 'spells'" :spells="itemsStats"></SpellRow>
-            <SpellRow v-if="mode === 'spells'" :spells="itemsStats"></SpellRow>
             <SoulbindsRow
                 v-else-if="mode === 'covenants'"
                 :soulbinds="itemsStats"
