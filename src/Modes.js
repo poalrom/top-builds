@@ -3,5 +3,5 @@ export default {
     talents: "talents",
     items: "items",
     legendaries: "legendaries",
-    // covenants: "covenants",
+    covenants: "covenants",
 };

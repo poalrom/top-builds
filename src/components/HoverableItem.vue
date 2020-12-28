@@ -3,7 +3,6 @@
         @click="click"
         @mouseenter="mouseEnter"
         @mouseleave="mouseLeave"
-        :data-id="id"
         class="hoverable-item"
         :class="{ 'hoverable-item_enabled': enabled }"
     >
@@ -51,3 +50,9 @@
         },
     };
 </script>
+
+<style>
+.hoverable-item {
+    display: block;
+}
+</style>

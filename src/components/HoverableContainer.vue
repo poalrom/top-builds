@@ -1,6 +1,7 @@
 <template>
     <div
-        :class="{ ['hoverable-containter_id_' + id]: id, 'hoverable-containter_enabled': id }"
+        class="hoverable-containter"
+        :class="{ 'hoverable-containter_enabled': id }"
         :style="style"
     >
         <slot></slot>

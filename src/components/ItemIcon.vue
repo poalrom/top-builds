@@ -38,7 +38,7 @@ export default {
         wowheadData() {
             return [
                 "item=" + this.item.id,
-                "ilvl=" + this.item.ilvl,
+                this.item.ilvl && "ilvl=" + this.item.ilvl,
                 this.item.enchantments &&
                     "ench=" + this.item.enchantments.join(":"),
                 this.item.sockets && "gems=" + this.item.sockets.join(":"),

@@ -4,8 +4,17 @@
             <p class="item-stats__title"><slot></slot></p>
             <ItemsRow v-if="mode === 'items'" :items="itemsStats"></ItemsRow>
             <SpellRow v-if="mode === 'spells'" :spells="itemsStats"></SpellRow>
+            <SpellRow v-if="mode === 'spells'" :spells="itemsStats"></SpellRow>
+            <SoulbindsRow
+                v-else-if="mode === 'covenants'"
+                :soulbinds="itemsStats"
+            ></SoulbindsRow>
         </div>
         <ItemsRow v-else-if="mode === 'items'" :items="itemsStats"></ItemsRow>
+        <SoulbindsRow
+            v-else-if="mode === 'covenants'"
+            :soulbinds="itemsStats"
+        ></SoulbindsRow>
         <SpellRow v-else :spells="itemsStats"></SpellRow>
     </div>
 </template>
@@ -14,6 +23,7 @@
 import modes from "../Modes";
 import SpellRow from "./SpellRow";
 import ItemsRow from "./ItemsRow";
+import SoulbindsRow from "./SoulbindsRow";
 import get from "lodash/fp/get";
 import sortBy from "lodash/fp/sortBy";
 import currentMode from "../store/currentMode";
@@ -27,10 +37,11 @@ import humanifySlotName from "../mappers/humanifySlotName";
 const SUMMARIZER_TYPE = {
     items: "items",
     spells: "spells",
+    covenants: "covenants",
 };
 
 export default {
-    components: { SpellRow, ItemsRow },
+    components: { SpellRow, ItemsRow, SoulbindsRow },
     props: {
         items: {
             type: Array,
@@ -47,6 +58,9 @@ export default {
         limit: {
             type: Number,
         },
+        groupBy: {
+            type: String,
+        },
     },
     computed: {
         itemsStats() {
@@ -58,7 +72,7 @@ export default {
                         charItems = [charItems];
                     }
                     for (const item of charItems) {
-                        const itemIsID = typeof item !== 'object';
+                        const itemIsID = typeof item !== "object";
                         const id = itemIsID ? item : item.id;
                         if (!acc[id]) {
                             acc[id] = itemIsID ? { id } : { ...item };

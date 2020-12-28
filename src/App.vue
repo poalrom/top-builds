@@ -38,6 +38,7 @@
             <TalentsTab v-show="currentMode === modes.talents"></TalentsTab>
             <ItemsTab v-show="currentMode === modes.items"></ItemsTab>
             <LegendariesTab v-show="currentMode === modes.legendaries"></LegendariesTab>
+            <CovenantsTab v-show="currentMode === modes.covenants"></CovenantsTab>
         </HoverableContainer>
 
         <ProgressBar
@@ -93,6 +94,7 @@ export default {
         TalentsTab,
         HoverableContainer,
         LegendariesTab,
+        CovenantsTab,
     },
     methods: {
         startCase,
