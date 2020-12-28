@@ -10,6 +10,8 @@ import { ICharInfo } from "../interfaces/ICharInfo";
 import { humanify } from "../mappers/humanify";
 import { PartialEmpty } from "../errors/PartialEmpty";
 import { getLegendariesFromEquipment } from "../mappers/getLegendariesFromEquipment";
+import { getCovenantInfoFromSoulbinds } from "../mappers/getCovenantInfoFromSoulbinds";
+import { ICharData } from "../interfaces/ICharData";
 
 const ANONYMOUS_REALM = "anonymous";
 
@@ -34,9 +36,17 @@ export async function getCharsStats(specChars: ISpecChars) {
         if (!charInfo.active_spec || charInfo.active_spec.name !== humanify(specChars.spec)) {
             return;
         }
+
         const stats = await bnetAPI.getCharacterStatistic(char.realmSlug, charName);
         const equipment = await bnetAPI.getCharacterEquipment(char.realmSlug, charName);
         const spec = await bnetAPI.getCharacterSpec(char.realmSlug, charName);
+        let soulbinds;
+        try {
+            soulbinds = await bnetAPI.getCharacterSoulbinds(char.realmSlug, charName);
+        } catch (e) {
+            logError(e, char);
+        }
+        const covenant = soulbinds && await getCovenantInfoFromSoulbinds(soulbinds, bnetAPI);
 
         try {
             return {
@@ -48,17 +58,22 @@ export async function getCharsStats(specChars: ISpecChars) {
                 talents: getTalentsFromSpec(spec, specChars.spec),
                 items: getItemsFromEquipment(equipment),
                 legendaries: getLegendariesFromEquipment(equipment),
+                covenant,
             };
         } catch (e) {
             if (!e || e.code !== PartialEmpty.code) {
                 throw e;
             }
 
-            console.error(String(e) + ` in ${char.name} from ${char.realmSlug}`);
+            logError(e, char);
 
             return;
         }
     }));
 
     return charactersInfo.filter(Boolean);
+}
+
+function logError(e: unknown, char: ICharData) {
+    console.error(String(e) + ` in ${char.name} from ${char.realmSlug}`);
 }

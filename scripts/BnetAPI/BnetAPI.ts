@@ -8,6 +8,7 @@ import { ICharInfo } from "../interfaces/ICharInfo";
 import { ICharacterStat } from "../interfaces/ICharacterStat";
 import { ICharacterSpec } from "../interfaces/ICharacterSpec";
 import { ICharacterEquip } from "../interfaces/ICharacterEquip";
+import { ISoulbinds } from "../interfaces/ISoulbinds";
 
 class BnetAPI {
     private accessToken = "";
@@ -66,6 +67,13 @@ class BnetAPI {
         );
     }
 
+    async getCharacterSoulbinds(realmSlug: string, characterName: string) {
+        return this.fetch<ISoulbinds>(
+            BnetNamespace.profile,
+            `/profile/wow/character/${realmSlug}/${encodeURIComponent(characterName)}/soulbinds`
+        );
+    }
+
     async getCharacterSpec(realmSlug: string, characterName: string) {
         return this.fetch<ICharacterSpec>(
             BnetNamespace.profile,
@@ -77,6 +85,44 @@ class BnetAPI {
         return this.fetch<ICharacterEquip>(
             BnetNamespace.profile,
             `/profile/wow/character/${realmSlug}/${encodeURIComponent(characterName)}/equipment`
+        );
+    }
+
+    async fetchByURL<T>(url: string): Promise<T> {
+        return this.limiter.schedule(
+            async () => {
+                console.log(`Fetch ${url}`);
+
+                if (!this.isAuthenticated) {
+                    if (!this.authRequest) {
+                        console.log(`Make auth request`);
+                        this.authRequest = this.auth();
+                    }
+                    console.log(`Wait for an auth`);
+                    await this.authRequest;
+                    console.log(`Wait for an auth success`);
+                }
+
+                const localeSearchParam = (url.includes('?') ? '&' : '?') + `locale=${this.locale}`;
+
+                return await got.get(url + localeSearchParam, {
+                    headers: {
+                        Authorization: `Bearer ${this.accessToken}`,
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .json()
+                    .then((res: T) => {
+                        console.log(`Fetch ${url} success`);
+                        return res;
+                    }).catch((e: RequestError) => {
+                        if (e.code === "401") {
+                            return this.fetchByURL<T>(url);
+                        }
+
+                        throw e;
+                    });
+            }
         );
     }
 
@@ -117,6 +163,8 @@ class BnetAPI {
         );
     }
 }
+
+export type IBnetAPI = BnetAPI;
 
 const apiCache = {} as Record<Region, BnetAPI>;
 
