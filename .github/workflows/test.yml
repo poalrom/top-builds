@@ -11,17 +11,25 @@ jobs:
     runs-on: ubuntu-latest
     environment: cache
 
+    env:
+      SEASON: season-sl-1
+      BNET_ID: ${{ secrets.BNET_ID }}
+      BNET_SECRET: ${{ secrets.BNET_SECRET }}
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js v16
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Switch Node.js v16
         uses: actions/setup-node@v2
         with:
           node-version: 16
-      - run: npm ci
-      - run: npm run build
-      - run: npm run cache
-        env:
-          SEASON: season-sl-1
-          CACHE_TO: 1
-          BNET_ID: ${{ secrets.BNET_ID }}
-          BNET_SECRET: ${{ secrets.BNET_SECRET }}
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Try to cache 1st data chunk
+        run: CACHE_TO=1 npm run cache
