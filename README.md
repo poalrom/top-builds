@@ -49,7 +49,7 @@ Works using free services:
 - Create a developer account on https://develop.battle.net/
 - Create new battle.net OAuth client on https://develop.battle.net/access/clients
 - Clone this repository
-- Install `NodeJS v12.16` or run `nvm i` if you have nvm
+- Install `NodeJS v16` or run `nvm i` if you have nvm
 - Install dependencies using `npm i`
 - Build code using `npm run build`
 - Copy `.env.example` file to `.env`
