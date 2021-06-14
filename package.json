@@ -22,26 +22,26 @@
     "dependencies": {
         "@websanova/vue-store": "^1.0.5-beta",
         "bottleneck": "^2.19.5",
-        "dotenv": "^8.0.0",
-        "got": "^10.6.0",
-        "lodash": "^4.17.20",
-        "lodash-es": "^4.17.15",
-        "petal.less": "^0.12.3",
-        "vue": "^2.6.11",
+        "dotenv": "^10.0.0",
+        "got": "^11.8.2",
+        "lodash": "^4.17.21",
+        "lodash-es": "^4.17.21",
+        "petal.less": "^0.12.4",
+        "vue": "^2.6.14",
         "vue-hot-reload-api": "^2.3.4",
-        "vue-resource": "^1.5.1"
+        "vue-resource": "^1.5.3"
     },
     "devDependencies": {
-        "@types/got": "^9.6.9",
-        "@types/lodash": "^4.14.149",
-        "@types/lodash-es": "^4.17.3",
-        "@vue/component-compiler-utils": "^3.1.1",
-        "less": "^3.11.1",
+        "@types/got": "^9.6.11",
+        "@types/lodash": "^4.14.170",
+        "@types/lodash-es": "^4.17.4",
+        "@vue/component-compiler-utils": "^3.2.1",
+        "less": "^4.1.1",
         "live-server": "^1.2.1",
         "npm-run-all": "^4.1.5",
         "parcel-bundler": "^1.12.4",
-        "tslint": "^5.18.0",
-        "typescript": "^3.5.2",
-        "vue-template-compiler": "^2.6.11"
+        "tslint": "^5.20.1",
+        "typescript": "^4.3.2",
+        "vue-template-compiler": "^2.6.14"
     }
 }
