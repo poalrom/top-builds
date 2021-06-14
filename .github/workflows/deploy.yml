@@ -1,0 +1,53 @@
+name: Deploy
+
+on:
+  schedule:
+    - cron: "0 4 * * *"
+  push:
+    branches: [ master ]
+  pull_request:
+    types: [ closed ]
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: cache
+    if: github.event.pull_request.merged == true
+    env:
+      SEASON: season-sl-1
+      BNET_ID: ${{ secrets.BNET_ID }}
+      BNET_SECRET: ${{ secrets.BNET_SECRET }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Switch Node.js v16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Cache 1st data chunk
+        run: CACHE_TO=1 npm run cache
+
+      - name: Cache 2nd data chunk
+        run: CACHE_FROM=8 CACHE_TO=16 npm run cache
+
+      - name: Cache 3rd data chunk
+        run: CACHE_FROM=16 CACHE_TO=24 npm run cache
+
+      - name: Cache 4th data chunk
+        run: CACHE_FROM=24 npm run cache
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: public
+          clean: false
