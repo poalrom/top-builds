@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "lib": [
+            "es2020"
+        ],
+        "target": "ESNEXT",
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "outDir": "../cache_dist",
+        "paths": {
+            "@common/*": [
+                "../common/*"
+            ]
+        },
+        "plugins": [
+            {
+                "transform": "@zerollup/ts-transform-paths"
+            }
+        ],
+        "baseUrl": "."
+    }
+}
