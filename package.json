@@ -22,7 +22,7 @@
     "dependencies": {
         "@websanova/vue-store": "^1.0.5-beta",
         "axios-rate-limit": "^1.3.0",
-        "blizzard.js": "git+https://github.com/poalrom/blizzard.js.git",
+        "blizzard.js": "^4.1.1",
         "bottleneck": "^2.19.5",
         "dotenv": "^10.0.0",
         "got": "^11.8.2",

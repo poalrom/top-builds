@@ -1,6 +1,6 @@
 # Top builds for mythic keys in World of Warcraft
 
-[![Build Status](https://travis-ci.com/poalrom/top-builds.svg?branch=master)](https://travis-ci.com/poalrom/top-builds)
+[![Cache](https://github.com/poalrom/top-builds/actions/workflows/cache.yml/badge.svg)](https://github.com/poalrom/top-builds/actions/workflows/cache.yml)
 
 ## What is it?
 
@@ -10,7 +10,7 @@ This is a static website with precached data that shows what build is used by th
 
 Works using free services: 
 - Hosted on GitHub Pages
-- Caching data every day using Travis CI
+- Caching data every day using Github Actions
 - Using public API of raider.io and battle.net
 
 ## Who are uses this?
@@ -32,7 +32,7 @@ Works using free services:
 ## How it works?
 
 ### Caching
-- Each day TravisCI runs cron job
+- Each day Github Actions runs cron job
 - Inside the job a script download top characters from raider.io
 - Each character validates in battle.net armory API that he used right specialization and has the full gear (sometimes players add new gear without enchants or gems, those builds are not representative)
 - If character passed due validation, script save character's data to a JSON file

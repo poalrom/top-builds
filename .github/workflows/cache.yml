@@ -1,4 +1,4 @@
-name: Deploy
+name: Cache
 
 on:
   schedule:
@@ -6,12 +6,15 @@ on:
   pull_request:
     types: [ closed ]
     branches: [ master ]
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Reason'
 
 jobs:
-  deploy:
+  cache:
     runs-on: ubuntu-latest
     environment: cache
-    if: github.event.pull_request.merged == true
     env:
       SEASON: season-sl-1
       BNET_ID: ${{ secrets.BNET_ID }}
