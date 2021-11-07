@@ -60,8 +60,8 @@ jobs:
     environment: cache
     env:
       SEASON: season-sl-1
-      BNET_ID: ${{ secrets.BNET_ID }}
-      BNET_SECRET: ${{ secrets.BNET_SECRET }}
+      BNET_ID: ${{ secrets.BNET_ID_2 }}
+      BNET_SECRET: ${{ secrets.BNET_SECRET_2 }}
       CACHE_FROM: 9
       CACHE_TO: 18
     steps:
@@ -86,8 +86,8 @@ jobs:
     environment: cache
     env:
       SEASON: season-sl-1
-      BNET_ID: ${{ secrets.BNET_ID }}
-      BNET_SECRET: ${{ secrets.BNET_SECRET }}
+      BNET_ID: ${{ secrets.BNET_ID_3 }}
+      BNET_SECRET: ${{ secrets.BNET_SECRET_3 }}
       CACHE_FROM: 18
       CACHE_TO: 27
     steps:
@@ -112,8 +112,8 @@ jobs:
     environment: cache
     env:
       SEASON: season-sl-1
-      BNET_ID: ${{ secrets.BNET_ID }}
-      BNET_SECRET: ${{ secrets.BNET_SECRET }}
+      BNET_ID: ${{ secrets.BNET_ID_4 }}
+      BNET_SECRET: ${{ secrets.BNET_SECRET_4 }}
       CACHE_FROM: 27
       CACHE_TO: 32
     steps:
