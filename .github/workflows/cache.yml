@@ -12,39 +12,167 @@ on:
         description: 'Reason'
 
 jobs:
-  cache:
+  build-frontend:
+    runs-on: ubuntu-latest
+    environment: cache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: ./.github/actions/build
+
+      - name: Upload frontend
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend
+          path: public
+          retention-days: 1
+
+  cache-1st-chunk:
     runs-on: ubuntu-latest
     environment: cache
     env:
       SEASON: season-sl-1
       BNET_ID: ${{ secrets.BNET_ID }}
       BNET_SECRET: ${{ secrets.BNET_SECRET }}
+      CACHE_FROM: 0
+      CACHE_TO: 9
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Switch Node.js v16
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-
-      - name: Install deps
-        run: npm ci
-
       - name: Build
-        run: npm run build
+        uses: ./.github/actions/build
 
       - name: Cache 1st data chunk
-        run: CACHE_TO=9 npm run cache
+        run: npm run cache
+        
+      - name: Upload 1st cache chunk
+        uses: actions/upload-artifact@v2
+        with:
+          name: 1st-cache
+          path: public
+          retention-days: 1
 
-      - name: Cache 2nd data chunk
-        run: CACHE_FROM=9 CACHE_TO=18 npm run cache
+  cache-2st-chunk:
+    runs-on: ubuntu-latest
+    environment: cache
+    env:
+      SEASON: season-sl-1
+      BNET_ID: ${{ secrets.BNET_ID }}
+      BNET_SECRET: ${{ secrets.BNET_SECRET }}
+      CACHE_FROM: 9
+      CACHE_TO: 18
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Cache 3rd data chunk
-        run: CACHE_FROM=18 CACHE_TO=27 npm run cache
+      - name: Build
+        uses: ./.github/actions/build
 
-      - name: Cache 4th data chunk
-        run: CACHE_FROM=27 npm run cache
+      - name: Cache 2st data chunk
+        run: npm run cache
+        
+      - name: Upload 2st cache chunk
+        uses: actions/upload-artifact@v2
+        with:
+          name: 2st-cache
+          path: public
+          retention-days: 1
+
+  cache-3st-chunk:
+    runs-on: ubuntu-latest
+    environment: cache
+    env:
+      SEASON: season-sl-1
+      BNET_ID: ${{ secrets.BNET_ID }}
+      BNET_SECRET: ${{ secrets.BNET_SECRET }}
+      CACHE_FROM: 18
+      CACHE_TO: 27
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: ./.github/actions/build
+
+      - name: Cache 3st data chunk
+        run: npm run cache
+        
+      - name: Upload 3st cache chunk
+        uses: actions/upload-artifact@v2
+        with:
+          name: 3st-cache
+          path: public
+          retention-days: 1
+
+  cache-4st-chunk:
+    runs-on: ubuntu-latest
+    environment: cache
+    env:
+      SEASON: season-sl-1
+      BNET_ID: ${{ secrets.BNET_ID }}
+      BNET_SECRET: ${{ secrets.BNET_SECRET }}
+      CACHE_FROM: 27
+      CACHE_TO: 32
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: ./.github/actions/build
+
+      - name: Cache 4st data chunk
+        run: npm run cache
+        
+      - name: Upload 4st cache chunk
+        uses: actions/upload-artifact@v2
+        with:
+          name: 4st-cache
+          path: public
+          retention-days: 1
+
+  deploy:
+    needs: [build-frontend, cache-1st-chunk, cache-2st-chunk, cache-3st-chunk, cache-4st-chunk]
+    runs-on: ubuntu-latest
+    environment: cache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download frontend
+        uses: actions/download-artifact@v2
+        with:
+          name: frontend
+          path: ./public
+      
+      - name: Download 1st cache chunk
+        uses: actions/download-artifact@v2
+        with:
+          name: 1st-cache
+          path: ./public
+
+      - name: Download 2st cache chunk
+        uses: actions/download-artifact@v2
+        with:
+          name: 2st-cache
+          path: ./public
+
+      - name: Download 3st cache chunk
+        uses: actions/download-artifact@v2
+        with:
+          name: 3st-cache
+          path: ./public
+
+      - name: Download 4st cache chunk
+        uses: actions/download-artifact@v2
+        with:
+          name: 4st-cache
+          path: ./public
+
+      - run: ls -la ./public
+        shell: bash
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
