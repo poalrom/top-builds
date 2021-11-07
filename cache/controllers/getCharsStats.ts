@@ -80,7 +80,7 @@ export async function getCharsStats({ specName }: IClassSpecPair, characters: IC
         if (charInfo.status === 'fulfilled') {
             acc.push(charInfo.value);
         } else {
-            console.error(`Error with ${chars[i].name} from ${chars[i].realm}`, charInfo.reason);
+            console.error(`Error with ${chars[i].name} from ${chars[i].realm.name}`, charInfo.reason);
         }
 
         return acc;

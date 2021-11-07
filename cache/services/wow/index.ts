@@ -1,8 +1,7 @@
 import { createClient } from 'blizzard.js/dist/create-client';
 import { wow } from 'blizzard.js';
-import axios from 'axios';
-import rateLimit from 'axios-rate-limit';
 import { Region } from '../../../common/types/Region';
+import { getTransport } from '../../transport';
 
 export let wowClient: wow.WoWClient;
 
@@ -17,10 +16,7 @@ export async function initWowClient(
         origin: region,
     });
 
-    client.axios = rateLimit(
-        axios.create(),
-        { maxRPS: 10 }
-    );
+    client.axios = getTransport({ rateLimit: { maxRPS: 10 } });
 
     wowClient = client;
 }

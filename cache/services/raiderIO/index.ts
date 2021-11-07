@@ -1,30 +1,24 @@
-import axios from 'axios';
-import rateLimit, { RateLimitedAxiosInstance } from 'axios-rate-limit';
-
-
 import { IStatisticData } from './types/IStatisticData';
 import { IRankingCharactersResponse } from './types/IRankingCharactersResponse';
 import { Region } from '../../../common/types/Region';
 import { ICharacter } from '../../../common/types/ICharacter';
+import { getTransport, ITransport } from '../../transport';
 
 
 class RaiderIO {
-    private axios: RateLimitedAxiosInstance;
+    private transport: ITransport;
     private baseUrl = 'https://raider.io/api/';
 
     constructor(
         private region: Region,
     ) {
-        this.axios = rateLimit(
-            axios.create(),
-            { maxRequests: 2, perMilliseconds: 1000, maxRPS: 2 }
-        );
+        this.transport = getTransport();
     }
 
     async getCurrentSeasonSlug(): Promise<string> {
         let statisticData: IStatisticData['seasons'] = [];
         for (let expansionID = 8; expansionID < 100; expansionID++) {
-            const { data: nextStatisticData } = await axios.get<IStatisticData>(
+            const { data: nextStatisticData } = await this.transport.get<IStatisticData>(
                 'v1/mythic-plus/static-data',
                 {
                     baseURL: this.baseUrl,
@@ -52,7 +46,7 @@ class RaiderIO {
     ): Promise<ICharacter[]> {
         console.log(`Fetch top chars for region ${this.region} season ${season} class ${charClass} spec ${spec} [page#${page}]`);
 
-        const { data } = await this.axios.get<IRankingCharactersResponse>(
+        const { data } = await this.transport.get<IRankingCharactersResponse>(
             'mythic-plus/rankings/specs',
             {
                 baseURL: this.baseUrl,
